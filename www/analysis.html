@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Intelligence Pro Dashboard</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-gradient: linear-gradient(135deg, #090e17 0%, #172554 100%);
+      --card-bg: rgba(255, 255, 255, 0.04);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      
+      /* Colors */
+      --success: #34d399;
+      --danger: #fb7185;
+      --warning: #fbbf24;
+      --info: #38bdf8;
+      --primary: #818cf8;
+      --purple: #c084fc;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-gradient);
+      color: var(--text-main);
+      min-height: 100vh;
+      box-sizing: border-box;
+      padding-bottom: 60px;
+    }
+
+    /* Scrollbar Styling */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg-gradient); }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+
+    h1 {
+      text-align: center;
+      padding: 40px 20px;
+      margin: 0;
+      font-weight: 800;
+      font-size: 2.8rem;
+      letter-spacing: -0.03em;
+      background: linear-gradient(to right, #38bdf8, #c084fc);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 4px 20px rgba(56, 189, 248, 0.2);
+    }
+
+    .container {
+      display: grid;
+      gap: 24px;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* Grid Layouts */
+    .grid-4 { grid-template-columns: repeat(4, 1fr); }
+    .grid-3 { grid-template-columns: repeat(3, 1fr); }
+    .grid-2 { grid-template-columns: repeat(2, 1fr); }
+
+    @keyframes slideUpFade {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 24px;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+      border: 1px solid var(--card-border);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+      
+      opacity: 0;
+      animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    /* Animation Delays */
+    .grid-4 .card:nth-child(1) { animation-delay: 0.1s; }
+    .grid-4 .card:nth-child(2) { animation-delay: 0.2s; }
+    .grid-4 .card:nth-child(3) { animation-delay: 0.3s; }
+    .grid-4 .card:nth-child(4) { animation-delay: 0.4s; }
+    
+    .grid-3 .card:nth-child(1) { animation-delay: 0.5s; }
+    .grid-3 .card:nth-child(2) { animation-delay: 0.6s; }
+    .grid-3 .card:nth-child(3) { animation-delay: 0.7s; }
+    
+    .grid-2 .card:nth-child(1) { animation-delay: 0.8s; }
+    .grid-2 .card:nth-child(2) { animation-delay: 0.9s; }
+
+    .card:hover {
+      transform: translateY(-8px);
+      border-color: rgba(255, 255, 255, 0.2);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 20px rgba(56, 189, 248, 0.15);
+    }
+
+    .card h3 {
+      margin-top: 0;
+      font-weight: 600;
+      font-size: 1.15rem;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 12px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* KPI Styling */
+    .kpi-value {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin: 10px 0 5px;
+      line-height: 1;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+    .kpi-sub {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+    .text-success { color: var(--success); text-shadow: 0 0 15px rgba(52, 211, 153, 0.3); }
+    .text-danger { color: var(--danger); text-shadow: 0 0 15px rgba(251, 113, 133, 0.3); }
+    .text-warning { color: var(--warning); text-shadow: 0 0 15px rgba(251, 191, 36, 0.3); }
+    .text-info { color: var(--info); text-shadow: 0 0 15px rgba(56, 189, 248, 0.3); }
+    .text-primary { color: var(--primary); text-shadow: 0 0 15px rgba(129, 140, 248, 0.3); }
+    .text-purple { color: var(--purple); text-shadow: 0 0 15px rgba(192, 132, 252, 0.3); }
+
+    /* Canvas sizing */
+    .card canvas {
+      max-height: 280px;
+      margin: auto;
+      width: 100% !important;
+    }
+
+    /* List & Insight Styling */
+    .list-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      flex-grow: 1;
+      justify-content: center;
+    }
+
+    .list-item {
+      background: rgba(255, 255, 255, 0.04);
+      padding: 14px 18px;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border: 1px solid rgba(255, 255, 255, 0.02);
+      transition: all 0.3s ease;
+    }
+
+    .list-item:hover {
+      background: rgba(255, 255, 255, 0.08);
+      transform: scale(1.02);
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .defaulter-item {
+      background: rgba(220, 38, 38, 0.1);
+      border-color: rgba(220, 38, 38, 0.3);
+      color: #fee2e2;
+    }
+    
+    .defaulter-item:hover {
+      background: rgba(220, 38, 38, 0.2);
+      border-color: rgba(220, 38, 38, 0.5);
+    }
+
+    .insight-icon {
+      font-size: 1.2rem;
+    }
+
+    .comparison-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px dashed rgba(255,255,255,0.1);
+    }
+    .comparison-row:last-child { border: none; }
+    
+    .comparison-bar-bg {
+      width: 100%;
+      height: 6px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 3px;
+      margin-top: 6px;
+      overflow: hidden;
+    }
+    .comparison-bar-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Back Button Styling */
+    .back-btn {
+      position: absolute;
+      top: 35px;
+      left: 30px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text-main);
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+      z-index: 100;
+      backdrop-filter: blur(10px);
+    }
+
+    .back-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateX(-5px);
+      border-color: rgba(255, 255, 255, 0.25);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    @media (max-width: 1024px) {
+      .grid-4 { grid-template-columns: repeat(2, 1fr); }
+      .grid-3 { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 768px) {
+      .grid-4, .grid-3, .grid-2 { grid-template-columns: 1fr; }
+      h1 { font-size: 2rem; margin-top: 20px; }
+      .back-btn {
+        position: relative;
+        top: 0;
+        left: 0;
+        margin: 20px 0 -20px 20px;
+        display: inline-flex;
+      }
+    }
+
+    /* --- CUSTOM CODELINE.AI LOADER --- */
+    .loader{
+      position:fixed; inset:0; background:rgba(9, 14, 23, 0.95); display:none; 
+      justify-content:center; align-items:center; z-index:9999; backdrop-filter:blur(10px);
+    }
+    .logo-loader{
+      display:flex; flex-direction:column; align-items:center; justify-content:center; gap:24px;
+    }
+    .logo-box{
+      width:150px; height:150px;
+      background: radial-gradient(circle at 30% 30%, rgba(56, 189, 248, 0.4), transparent 50%), rgba(15, 23, 42, 0.6);
+      border:2px solid rgba(192, 132, 252, 0.3); border-radius:24px;
+      display:flex; align-items:center; justify-content:center; position:relative;
+      box-shadow: 0 0 50px rgba(192, 132, 252, 0.3), inset 0 0 30px rgba(192, 132, 252, 0.1);
+      animation:logoPulse 2s ease-in-out infinite;
+    }
+    @keyframes logoPulse{
+      0%, 100%{ box-shadow: 0 0 50px rgba(192, 132, 252, 0.3), inset 0 0 30px rgba(192, 132, 252, 0.1); transform:scale(1); }
+      50%{ box-shadow: 0 0 80px rgba(192, 132, 252, 0.5), inset 0 0 50px rgba(192, 132, 252, 0.2); transform:scale(1.05); }
+    }
+    svg.logo-svg{
+      width:120px; height:120px; animation:logoFloat 2s ease-in-out infinite; filter:drop-shadow(0 0 15px rgba(56, 189, 248, 0.5));
+    }
+    svg.logo-svg path, svg.logo-svg polygon{
+      stroke:#38bdf8; stroke-width:3; fill:none; stroke-linecap:round; stroke-linejoin:round;
+    }
+    svg.logo-svg path:nth-child(1){ animation:drawPath 2s ease-in-out infinite; }
+    svg.logo-svg path:nth-child(2){ animation:drawPath 2s ease-in-out infinite 0.3s; }
+    svg.logo-svg path:nth-child(3){ animation:drawPath 2s ease-in-out infinite 0.6s; }
+    @keyframes drawPath{
+      0%, 100%{ stroke-dasharray:100; stroke-dashoffset:0; opacity:1; }
+      50%{ stroke-dasharray:100; stroke-dashoffset:10; opacity:0.8; }
+    }
+    .logo-label{
+      font-size:11px; letter-spacing:1px; text-transform:uppercase; color:#c084fc; font-weight:700; margin-top:8px; animation:logoFloat 2s ease-in-out infinite;
+    }
+    @keyframes logoFloat{
+      0%, 100%{ transform:translateY(0); }
+      50%{ transform:translateY(-8px); }
+    }
+    .logo-box::before{
+      content:''; position:absolute; inset:0; border-radius:24px;
+      background:conic-gradient(from 0deg,#38bdf8,#c084fc,#38bdf8); opacity:0.1; animation:logoSpin 3s linear infinite;
+    }
+    .logo-box::after{
+      content:''; position:absolute; inset:-8px; border:2px solid transparent;
+      border-top-color:#38bdf8; border-right-color:#c084fc; border-radius:24px; animation:logoRingSpin 2s linear infinite reverse;
+    }
+    @keyframes logoSpin{ 100%{transform:rotate(360deg)} }
+    @keyframes logoRingSpin{ 100%{transform:rotate(-360deg)} }
+    .loading-bar{
+      width:160px; height:3px; background:rgba(56, 189, 248, 0.2); border-radius:999px; overflow:hidden; box-shadow:0 0 20px rgba(56, 189, 248, 0.2);
+    }
+    .loading-bar::after{
+      content:''; display:block; width:50%; height:100%;
+      background:linear-gradient(90deg, transparent, #38bdf8, transparent); animation:loadingSlide 1.5s ease-in-out infinite;
+    }
+    @keyframes loadingSlide{
+      0%{ transform:translateX(-100%); }
+      100%{ transform:translateX(400%); }
+    }
+    .loading-text{
+      font-size:14px; color:rgba(255,255,255,0.68); letter-spacing:2px; text-transform:uppercase; font-weight:600; animation:loadingDots 1.2s steps(3) infinite;
+    }
+    @keyframes loadingDots{
+      0%, 20%{content:'Loading'} 40%{content:'Loading.'} 60%{content:'Loading..'} 80%, 100%{content:'Loading...'}
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="loader" id="loader">
+  <div class="logo-loader">
+    <div class="logo-box">
+      <svg class="logo-svg" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+        <path d="M 25 30 Q 15 45, 15 60 Q 15 75, 25 90" />
+        <path d="M 60 20 L 75 30 L 75 50 L 60 60 L 45 50 L 45 30 Z" />
+        <path d="M 95 30 L 85 30 Q 75 30, 75 60 Q 75 90, 85 90 L 95 90" />
+      </svg>
+      <div class="logo-label">CodeLine.AI</div>
+    </div>
+    <div class="loading-bar"></div>
+    <div class="loading-text">Loading</div>
+  </div>
+</div>
+
+<button class="back-btn" onclick="goBack()">
+  <span>←</span> Back to Admin
+</button>
+
+<h1>🚀 Intelligence Pro Dashboard</h1>
+
+<div class="container grid-4">
+  <div class="card">
+    <h3>💰 1. Revenue & Efficiency</h3>
+    <div class="kpi-value text-success">66.4%</div>
+    <div class="kpi-sub">Collection Efficiency (Paid/Total * 100)</div>
+    <div style="margin-top:15px; font-weight:600;">
+      <div>Total Fees: <span style="float:right;">₹2,08,364</span></div>
+      <div>Collected: <span class="text-success" style="float:right;">₹1,38,364</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🚨 Stuck / Pending</h3>
+    <div class="kpi-value text-danger">₹70,000</div>
+    <div class="kpi-sub">Total Capital at Risk</div>
+    <div style="margin-top:15px; font-size: 0.9rem; color: var(--text-muted);">
+      Impact: Restricts business cash flow. Immediate follow-up required for Top 3 defaulters.
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>📈 10. Future Forecast</h3>
+    <div class="kpi-value text-purple">₹45,500</div>
+    <div class="kpi-sub">Expected Collection (Next 15 Days)</div>
+    <div class="comparison-bar-bg"><div class="comparison-bar-fill" style="width: 65%; background: var(--purple);"></div></div>
+    <div style="margin-top:10px; font-size: 0.85rem; color: var(--text-muted);">Based on installment dues & historical traits.</div>
+  </div>
+
+  <div class="card">
+    <h3>⏳ 10. Late Fee Impact</h3>
+    <div class="kpi-value text-warning">₹4,200</div>
+    <div class="kpi-sub">Additional Rev Generated</div>
+    <div style="margin-top:15px; font-size: 0.9rem; color: var(--text-muted);">
+      Average Delay: <strong style="color:white;">12 Days</strong><br>
+      High Delay Rate in Python courses.
+    </div>
+  </div>
+</div>
+
+<div class="container grid-3" style="margin-top: 24px;">
+  <div class="card">
+    <h3>📊 1. Overall Revenue</h3>
+    <canvas id="pendingChart"></canvas>
+  </div>
+
+  <div class="card">
+    <h3>👨‍🎓 2. Payment Behavior</h3>
+    <canvas id="paymentBehaviorChart"></canvas>
+  </div>
+
+  <div class="card">
+    <h3>📚 3. Course Demand</h3>
+    <canvas id="courseDemandChart"></canvas>
+  </div>
+</div>
+
+<div class="container grid-3" style="margin-top: 24px;">
+  <div class="card">
+    <h3>🚨 6. Top 3 Defaulters</h3>
+    <div class="list-group">
+      <div class="list-item defaulter-item">
+        <span><span class="insight-icon">💀</span> Ram</span>
+        <span style="font-weight:700;">₹33,000 Due</span>
+      </div>
+      <div class="list-item defaulter-item">
+        <span><span class="insight-icon">⚠️</span> Aqua</span>
+        <span style="font-weight:700;">₹19,000 Due</span>
+      </div>
+      <div class="list-item defaulter-item">
+        <span><span class="insight-icon">⚠️</span> Noob</span>
+        <span style="font-weight:700;">₹18,000 Due</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🧠 8. Smart Insights</h3>
+    <div class="list-group">
+      <div class="list-item">
+        <span><span class="insight-icon">🔥</span> AI/ML is the most popular</span>
+      </div>
+      <div class="list-item">
+        <span><span class="insight-icon">⚠️</span> 33.6% of revenue is pending</span>
+      </div>
+      <div class="list-item">
+        <span><span class="insight-icon">🎯</span> Best Batch Time: 6:00 PM</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>⚖️ 9. Comparison Analysis</h3>
+    <div class="list-group" style="gap:4px;">
+      <div class="comparison-row">
+        <span><strong>Java</strong> Revenue</span>
+        <span>₹64,364 <span class="text-success">(99% Coll)</span></span>
+      </div>
+      <div class="comparison-bar-bg"><div class="comparison-bar-fill" style="width: 99%; background: var(--success);"></div></div>
+
+      <div class="comparison-row" style="margin-top:10px;">
+        <span><strong>Python</strong> Revenue</span>
+        <span>₹50,000 <span class="text-warning">(64% Coll)</span></span>
+      </div>
+      <div class="comparison-bar-bg"><div class="comparison-bar-fill" style="width: 64%; background: var(--warning);"></div></div>
+
+      <div class="comparison-row" style="margin-top:10px;">
+        <span><strong>AI/ML</strong> Revenue</span>
+        <span>₹94,000 <span class="text-danger">(44% Coll)</span></span>
+      </div>
+      <div class="comparison-bar-bg"><div class="comparison-bar-fill" style="width: 44%; background: var(--danger);"></div></div>
+    </div>
+  </div>
+</div>
+
+<div class="container grid-2" style="margin-top: 24px;">
+  <div class="card">
+    <h3>⏰ 4. Batch Timing Analysis (Traffic)</h3>
+    <canvas id="batchTimingChart"></canvas>
+  </div>
+
+  <div class="card">
+    <h3>📅 5. Admission Trends</h3>
+    <canvas id="admissionTrendChart"></canvas>
+  </div>
+</div>
+
+<div class="container" style="margin-top: 24px;">
+  <div class="card" style="padding:0; overflow:hidden;">
+    <div style="padding: 24px;">
+      <h3>🔍 Deep Student Analysis (All Students)</h3>
+      <div style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 20px;">
+        Real-time breakdown of every student's payment, balance, and progress. High-risk accounts are shown entirely.
+      </div>
+    </div>
+    <div style="overflow-x: auto;">
+      <table style="width: 100%; border-collapse: collapse; text-align: left; min-width: 800px;">
+        <thead>
+          <tr style="background: rgba(255,255,255,0.02); border-bottom: 1px solid var(--card-border); border-top: 1px solid var(--card-border);">
+            <th style="padding: 16px 24px; font-weight: 600; color:var(--text-muted);">Student Name</th>
+            <th style="padding: 16px 24px; font-weight: 600; color:var(--text-muted);">Course</th>
+            <th style="padding: 16px 24px; font-weight: 600; color:var(--text-muted);">Total Fee</th>
+            <th style="padding: 16px 24px; font-weight: 600; color:var(--text-muted);">Paid</th>
+            <th style="padding: 16px 24px; font-weight: 600; color:var(--text-muted);">Pending Risk</th>
+            <th style="padding: 16px 24px; font-weight: 600; color:var(--text-muted); width: 250px;">Progress</th>
+          </tr>
+        </thead>
+        <tbody id="deepAnalysisBody">
+          </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script src="config.js"></script>
+
+<script>
+
+
+function getUser() {
+    const data = sessionStorage.getItem("portalUser");
+    return data ? JSON.parse(data) : null;
+}
+
+const formatCurrency = (value) => {
+    return new Intl.NumberFormat('en-IN', {
+        style: 'currency',
+        currency: 'INR',
+        maximumFractionDigits: 0
+    }).format(value);
+};
+
+function goBack() {
+    // Navigates back to the Admin Dashboard
+    window.history.back();
+}
+
+function showLoader() { document.getElementById('loader').style.display = 'flex'; }
+function hideLoader() { document.getElementById('loader').style.display = 'none'; }
+
+// Global Chart Configs
+Chart.defaults.color = '#94a3b8';
+Chart.defaults.font.family = 'Inter';
+Chart.defaults.font.size = 13;
+Chart.defaults.plugins.tooltip.backgroundColor = 'rgba(15, 23, 42, 0.95)';
+Chart.defaults.plugins.tooltip.titleColor = '#f8fafc';
+Chart.defaults.plugins.tooltip.bodyColor = '#cbd5e1';
+Chart.defaults.plugins.tooltip.borderColor = 'rgba(255,255,255,0.1)';
+Chart.defaults.plugins.tooltip.borderWidth = 1;
+Chart.defaults.plugins.tooltip.padding = 12;
+Chart.defaults.plugins.tooltip.cornerRadius = 8;
+Chart.defaults.plugins.tooltip.displayColors = true;
+Chart.defaults.plugins.tooltip.boxPadding = 6;
+
+const gridOptions = {
+    color: 'rgba(255,255,255,0.05)',
+    borderDash: [5, 5],
+    drawBorder: false
+};
+
+const currencyTooltip = {
+    callbacks: {
+        label: function(context) {
+            let label = context.dataset.label || '';
+            if (label) label += ': ';
+            if (context.parsed.y !== null && context.chart.config.type !== 'doughnut') {
+                label += formatCurrency(context.parsed.y);
+            } else if (context.chart.config.type === 'doughnut') {
+                label += formatCurrency(context.raw);
+            }
+            return label;
+        }
+    }
+};
+
+const getGradient = (ctx, chartArea, colorStart, colorEnd) => {
+    const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
+    gradient.addColorStop(0, colorStart);
+    gradient.addColorStop(1, colorEnd);
+    return gradient;
+};
+
+let students = [];
+let pending = [];
+
+let pendingChartInst = null;
+let paymentBehaviorChartInst = null;
+let courseDemandChartInst = null;
+let batchTimingChartInst = null;
+let admissionTrendChartInst = null;
+
+async function fetchDashboardData() {
+    const user = getUser();
+    if (!user || user.role !== "admin" || !user.token) {
+        alert("Session expired or not authorized. Redirecting to login...");
+        window.location.href = "index.html";
+        return;
+    }
+    
+    showLoader();
+
+    try {
+        const params = new URLSearchParams({
+            action: "getAdminDashboard",
+            email: user.email,
+            token: user.token
+        });
+
+        const res = await fetch(`${SCRIPT_URL}?${params.toString()}`);
+        const result = await res.json();
+        
+        if (!result.success) {
+            alert("Failed to load dynamic data, displaying empty dashboard.");
+            hideLoader();
+            return;
+        }
+        
+        students = result.students || [];
+        pending = result.pending || [];
+        
+        renderDashboard();
+    } catch (err) {
+        console.error(err);
+        alert("Error fetching dashboard data, please try again.");
+    } finally {
+        hideLoader();
+    }
+}
+
+function getMonthName(dateString) {
+    if (!dateString) return "Unknown";
+    const date = new Date(dateString);
+    if (!isNaN(date.getTime())) {
+        return date.toLocaleString('default', { month: 'short' });
+    }
+    const parts = dateString.split(/[-/]/);
+    if(parts.length >= 2) {
+        let m = parseInt(parts[1], 10);
+        const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+        if(m>=1 && m<=12) return months[m-1];
+    }
+    return "Unknown";
+}
+
+function compileData() {
+    let totalFees = 0;
+    let totalPaid = 0;
+    let totalBalance = 0;
+    let courseCounts = {};
+    let courseRevenue = {};
+    let batchCounts = {};
+    let monthCounts = {};
+    let totalLateFees = 0;
+    let expectedNext15Days = 0;
+
+    let studentLateFees = {};
+    pending.forEach(p => {
+        let lf = Number(p.lateFee || 0);
+        totalLateFees += lf;
+        if(p.email) {
+            studentLateFees[p.email] = (studentLateFees[p.email] || 0) + lf;
+        }
+    });
+
+    const now = new Date();
+    
+    students.forEach(s => {
+        let p = Number(s.totalPaidFees || 0);
+        let b = Number(s.balanceFees || 0);
+        
+        let lf = studentLateFees[s.email] || 0;
+        let dueAmt = Number(s.due || s.deu || s.dueFees || s.dueAmount || 0);
+        b += (lf + dueAmt);
+        
+        let f = p + b;
+        
+        s.totalFees = f;
+        s.balanceFees = b;
+        
+        totalFees += f;
+        totalPaid += p;
+        totalBalance += b;
+        
+        let c = s.course || "Other";
+        courseCounts[c] = (courseCounts[c] || 0) + 1;
+        if(!courseRevenue[c]) courseRevenue[c] = {total: 0, collected: 0, balance: 0};
+        courseRevenue[c].total += f;
+        courseRevenue[c].collected += p;
+        courseRevenue[c].balance += b;
+        
+        let bCode = s.batch || "Unassigned";
+        batchCounts[bCode] = (batchCounts[bCode] || 0) + 1;
+        
+        let month = getMonthName(s.admissionDate);
+        monthCounts[month] = (monthCounts[month] || 0) + 1;
+
+        if (s.dueDate && b > 0) {
+            let dDate = new Date(s.dueDate);
+            if (!isNaN(dDate.getTime())) {
+                let diffTime = dDate.getTime() - now.getTime();
+                let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                if (diffDays >= 0 && diffDays <= 15) {
+                    expectedNext15Days += b;
+                }
+            } else if (typeof s.dueDate === 'string') {
+                 let parts = s.dueDate.split(/[-/]/);
+                 if (parts.length >= 3) {
+                     let d = new Date(parts[2], parts[1]-1, parts[0]);
+                     let diffTime = d.getTime() - now.getTime();
+                     let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                     if (diffDays >= 0 && diffDays <= 15) {
+                         expectedNext15Days += b;
+                     }
+                 }
+            }
+        }
+    });
+
+    let effNum = totalFees > 0 ? ((totalPaid / totalFees) * 100) : 0;
+    let efficiency = effNum.toFixed(1);
+    if (totalBalance > 0 && efficiency === "100.0") {
+        efficiency = "99.9";
+    }
+    
+    let sortedStudents = [...students].sort((a,b) => Number(b.balanceFees) - Number(a.balanceFees));
+    let topDefaulters = sortedStudents.filter(s => Number(s.balanceFees || 0) > 0).slice(0, 4);
+
+    let maxCourse = "N/A";
+    let maxCourseCount = 0;
+    for (let c in courseCounts) { if(courseCounts[c] > maxCourseCount){ maxCourseCount=courseCounts[c]; maxCourse=c; } }
+
+    let maxBatch = "N/A";
+    let maxBatchCount = 0;
+    for (let b in batchCounts) { if(batchCounts[b] > maxBatchCount) { maxBatchCount=batchCounts[b]; maxBatch=b; } }
+
+    let pendingPercent = totalFees > 0 ? ((totalBalance / totalFees) * 100).toFixed(1) : 0;
+
+    return {
+        totalFees, totalPaid, totalBalance, totalLateFees, expectedNext15Days, efficiency,
+        courseCounts, courseRevenue, batchCounts, monthCounts, topDefaulters,
+        sortedStudents, maxCourse, maxBatch, pendingPercent
+    };
+}
+
+function renderDashboard() {
+    const data = compileData();
+
+    // 1. Text Cards Update
+    document.querySelector('.card:nth-child(1) .kpi-value').innerText = `${data.efficiency}%`;
+    document.querySelector('.card:nth-child(1) div[style*="font-weight:600;"]').innerHTML = `
+      <div>Total Fees: <span style="float:right;">${formatCurrency(data.totalFees)}</span></div>
+      <div>Collected: <span class="text-success" style="float:right;">${formatCurrency(data.totalPaid)}</span></div>
+    `;
+
+    document.querySelector('.card:nth-child(2) .kpi-value').innerText = `${formatCurrency(data.totalBalance)}`;
+    document.querySelector('.card:nth-child(3) .kpi-value').innerText = `${formatCurrency(data.expectedNext15Days)}`;
+    
+    let expectedPercent = data.totalBalance > 0 ? (data.expectedNext15Days / data.totalBalance) * 100 : 0;
+    document.querySelector('.card:nth-child(3) .comparison-bar-fill').style.width = `${Math.min(100, Math.max(5, expectedPercent))}%`;
+
+    document.querySelector('.card:nth-child(4) .kpi-value').innerText = `${formatCurrency(data.totalLateFees)}`;
+
+    // 2. Defaulters List Update
+    let defaultersHtml = '';
+    data.topDefaulters.slice(0,3).forEach(d => {
+        defaultersHtml += `
+        <div class="list-item defaulter-item">
+            <span><span class="insight-icon">⚠️</span> ${d.name || 'Unknown'}</span>
+            <span style="font-weight:700;">${formatCurrency(Number(d.balanceFees))} Due</span>
+        </div>`;
+    });
+    if(data.topDefaulters.length === 0) defaultersHtml = `<div class="list-item"><span><span class="insight-icon">✅</span> No Defaulters</span></div>`;
+    
+    document.querySelectorAll('.card h3').forEach(h3 => {
+        if(h3.innerText.includes('Defaulter')) {
+            h3.nextElementSibling.innerHTML = defaultersHtml;
+        }
+    });
+
+    // 2.5 Smart Insights Dynamic Update
+    let insightsContainer = null;
+    document.querySelectorAll('.card h3').forEach(h3 => {
+        if(h3.innerText.includes('Smart Insights')) insightsContainer = h3.nextElementSibling;
+    });
+    if(insightsContainer) {
+        insightsContainer.innerHTML = `
+          <div class="list-item"><span><span class="insight-icon">🔥</span> <strong>${data.maxCourse}</strong> is the most popular</span></div>
+          <div class="list-item"><span style="color: ${data.pendingPercent > 20 ? 'var(--danger)' : 'var(--warning)'}"><span class="insight-icon">⚠️</span> <strong>${data.pendingPercent}%</strong> of revenue is pending</span></div>
+          <div class="list-item"><span><span class="insight-icon">🎯</span> Best Batch Time: <strong>${data.maxBatch}</strong></span></div>
+        `;
+    }
+
+    // 3. Comparisons List Update
+    document.querySelectorAll('.card h3').forEach(h3 => {
+        if(h3.innerText.includes('Comparison Analysis')) {
+            let container = h3.nextElementSibling;
+            let compHtml = '';
+            Object.keys(data.courseRevenue).slice(0, 4).forEach(c => {
+                let rev = data.courseRevenue[c];
+                let percNum = rev.total > 0 ? (rev.collected / rev.total) * 100 : 0;
+                let perc = percNum.toFixed(0);
+                if (rev.balance > 0 && perc === "100") perc = "99";
+                
+                let colorClass = perc >= 80 ? 'text-success' : (perc >= 50 ? 'text-warning' : 'text-danger');
+                let colorVar = perc >= 80 ? 'var(--success)' : (perc >= 50 ? 'var(--warning)' : 'var(--danger)');
+                
+                compHtml += `
+                <div class="comparison-row" style="margin-top:10px;">
+                    <span><strong>${c}</strong> Revenue</span>
+                    <span>${formatCurrency(rev.total)} <span class="${colorClass}">(${perc}% Coll)</span></span>
+                </div>
+                <div class="comparison-bar-bg"><div class="comparison-bar-fill" style="width: ${perc}%; background: ${colorVar};"></div></div>
+                `;
+            });
+            container.innerHTML = compHtml;
+        }
+    });
+
+    // 4. Update Charts
+    if (pendingChartInst) pendingChartInst.destroy();
+    pendingChartInst = new Chart(document.getElementById('pendingChart'), {
+        type: 'doughnut',
+        data: {
+            labels: ['Total Paid', 'Total Pending'],
+            datasets: [{
+                data: [data.totalPaid, data.totalBalance],
+                backgroundColor: ['#34d399', '#fb7185'],
+                borderWidth: 2,
+                borderColor: '#0f172a',
+                hoverOffset: 12,
+                borderRadius: 4
+            }]
+        },
+        options: { cutout: '65%', plugins: { legend: { position: 'bottom', labels: { color: '#f8fafc', padding: 20 } }, tooltip: currencyTooltip } }
+    });
+
+    let labels2 = data.topDefaulters.map(d => d.name).slice(0, 4);
+    let paidD = data.topDefaulters.map(d => Number(d.totalPaidFees)).slice(0, 4);
+    let pendingD = data.topDefaulters.map(d => Number(d.balanceFees)).slice(0, 4);
+    
+    if (paymentBehaviorChartInst) paymentBehaviorChartInst.destroy();
+    paymentBehaviorChartInst = new Chart(document.getElementById('paymentBehaviorChart'), {
+        type: 'bar',
+        data: {
+            labels: labels2.length ? labels2 : ['No Data'],
+            datasets: [
+                { label: 'Paid', data: paidD.length ? paidD : [0], backgroundColor: '#38bdf8', borderRadius: 4 },
+                { label: 'Pending', data: pendingD.length ? pendingD : [0], backgroundColor: '#fb7185', borderRadius: 4 }
+            ]
+        },
+        options: { responsive: true, scales: { x: { stacked: true, grid: { display: false } }, y: { stacked: true, grid: gridOptions } }, plugins: { legend: { position: 'bottom', labels: { color: '#f8fafc', padding: 20 } }, tooltip: currencyTooltip } }
+    });
+
+    let labels3 = Object.keys(data.courseCounts);
+    let counts3 = Object.values(data.courseCounts);
+    if (courseDemandChartInst) courseDemandChartInst.destroy();
+    courseDemandChartInst = new Chart(document.getElementById('courseDemandChart'), {
+        type: 'doughnut',
+        data: {
+            labels: labels3.length ? labels3 : ['No Data'],
+            datasets: [{
+                data: counts3.length ? counts3 : [1],
+                backgroundColor: ['#c084fc', '#818cf8', '#38bdf8', '#34d399', '#fbbf24', '#fb7185'], 
+                borderWidth: 2, borderColor: '#0f172a', hoverOffset: 12, borderRadius: 4
+            }]
+        },
+        options: { cutout: '65%', plugins: { legend: { position: 'bottom', labels: { color: '#f8fafc', padding: 20 } }, tooltip: { callbacks: { label: function(ctx) { return ` ${ctx.label}: ${ctx.raw} Students`; } } } } }
+    });
+
+    let labels4 = Object.keys(data.batchCounts);
+    let counts4 = Object.values(data.batchCounts);
+    if (batchTimingChartInst) batchTimingChartInst.destroy();
+    batchTimingChartInst = new Chart(document.getElementById('batchTimingChart').getContext('2d'), {
+        type: 'bar',
+        data: {
+            labels: labels4.length ? labels4 : ['No Data'],
+            datasets: [{
+                label: 'Students Active',
+                data: counts4.length ? counts4 : [0],
+                backgroundColor: function(context) {
+                    const chart = context.chart;
+                    const {ctx, chartArea} = chart;
+                    if (!chartArea) return null;
+                    return getGradient(ctx, chartArea, 'rgba(192, 132, 252, 0.4)', 'rgba(192, 132, 252, 1)');
+                },
+                borderRadius: 6, borderWidth: 1, borderColor: '#c084fc'
+            }]
+        },
+        options: { responsive: true, scales: { x: { grid: { display: false } }, y: { grid: gridOptions, beginAtZero: true } }, plugins: { legend: { display: false }, tooltip: { callbacks: { label: function(ctx) { return ` Active: ${ctx.parsed.y} Students`; } } } } }
+    });
+
+    let labels5 = Object.keys(data.monthCounts);
+    let counts5 = Object.values(data.monthCounts);
+    
+    if (admissionTrendChartInst) admissionTrendChartInst.destroy();
+    admissionTrendChartInst = new Chart(document.getElementById('admissionTrendChart').getContext('2d'), {
+        type: 'line',
+        data: {
+            labels: labels5.length ? labels5 : ['No Data'],
+            datasets: [{
+                label: 'New Admissions',
+                data: counts5.length ? counts5 : [0],
+                borderColor: '#34d399',
+                backgroundColor: function(context) {
+                    const chart = context.chart;
+                    const {ctx, chartArea} = chart;
+                    if (!chartArea) return null;
+                    return getGradient(ctx, chartArea, 'rgba(52, 211, 153, 0)', 'rgba(52, 211, 153, 0.4)');
+                },
+                borderWidth: 3, fill: true, tension: 0.4,
+                pointBackgroundColor: '#0f172a', pointBorderColor: '#34d399', pointBorderWidth: 2, pointRadius: 5, pointHoverRadius: 7
+            }]
+        },
+        options: { responsive: true, scales: { x: { grid: { display: false } }, y: { grid: gridOptions, beginAtZero: true } }, plugins: { legend: { position: 'bottom', labels: { color: '#f8fafc', padding: 20 } }, tooltip: { callbacks: { label: function(ctx) { return ` Admissions: ${ctx.parsed.y}`; } } } } }
+    });
+
+    // 5. Render Deep Student Analysis
+    let tableBody = document.getElementById('deepAnalysisBody');
+    if (tableBody) {
+        let html = '';
+        data.sortedStudents.forEach((student, index) => {
+            let f = Number(student.totalFees || 0);
+            let p = Number(student.totalPaidFees || 0);
+            let b = Number(student.balanceFees || 0);
+            let percent = f > 0 ? Math.min(100, Math.max(0, (p / f) * 100)) : 0;
+            
+            let displayPercent = percent.toFixed(0);
+            if (b > 0 && displayPercent === "100") {
+                displayPercent = "99";
+            }
+
+            let riskColorVar = b > 0 ? (b > 10000 ? 'var(--danger)' : 'var(--warning)') : 'var(--success)';
+            let rowStyle = b > 0 && b > 20000 ? 'background: rgba(220, 38, 38, 0.05);' : (index % 2 === 0 ? 'background: rgba(255,255,255,0.01);' : '');
+
+            html += `
+            <tr style="border-bottom: 1px solid var(--card-border); ${rowStyle} transition: background 0.3s; cursor:default;" onmouseover="this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.background='${rowStyle.includes('0.05') ? 'rgba(220, 38, 38, 0.05)' : (index % 2 === 0 ? 'rgba(255,255,255,0.01)' : 'transparent')}'">
+                <td style="padding: 16px 24px; font-weight: 600;">${student.name || 'Unknown'}</td>
+                <td style="padding: 16px 24px; color: var(--text-muted);">${student.course || 'N/A'}</td>
+                <td style="padding: 16px 24px;">${formatCurrency(f)}</td>
+                <td style="padding: 16px 24px; color: var(--success); font-weight: 600;">${formatCurrency(p)}</td>
+                <td style="padding: 16px 24px; color: ${riskColorVar}; font-weight: 700;">${b > 0 ? formatCurrency(b) : 'Paid'}</td>
+                <td style="padding: 16px 24px;">
+                    <div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-bottom:6px;">
+                        <span style="color:var(--text-muted);">Completion</span>
+                        <span style="font-weight:700;">${displayPercent}%</span>
+                    </div>
+                    <div class="comparison-bar-bg" style="margin-top:0;">
+                        <div class="comparison-bar-fill" style="width: ${displayPercent}%; background: ${b === 0 ? 'var(--success)' : (percent > 40 ? 'var(--info)' : 'var(--danger)')};"></div>
+                    </div>
+                </td>
+            </tr>
+            `;
+        });
+        if(data.sortedStudents.length === 0){
+             html = `<tr><td colspan="6" style="padding: 30px; text-align: center; color: var(--text-muted);">No student data available.</td></tr>`;
+        }
+        tableBody.innerHTML = html;
+    }
+}
+
+// Start sequence
+window.addEventListener('DOMContentLoaded', fetchDashboardData);
+</script>
+
+</body>
+</html>

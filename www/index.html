@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Codeline AI - Login</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+:root {
+  /* Brand Accents */
+  --primary-dark: #4B0082; /* Dark Purple for Titles & Buttons */
+  --accent-color: #4B0082;
+  
+  /* Card Theme */
+  --card-bg: #ffffff;
+  --text-on-card: #000000;
+  --text-muted-card: #555555;
+  --border-color: #000000;
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Segoe UI,sans-serif;
+}
+
+/* BACKGROUND ANIMATION - REVERTED TO ORIGINAL VIBRANT NEON */
+body {
+  height: 100vh;
+  /* High-contrast, deeply saturated gradient */
+  background: linear-gradient(-45deg, #1a0033, #5500cc, #9d00ff, #ff00aa);
+  background-size: 400% 400%;
+  animation: gradientShift 12s ease infinite;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden; /* Prevents scrollbars from floating particles */
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* FLOATING CODE FRAGMENTS - ORIGINAL HIGH INTENSITY GLOW */
+.animated-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  z-index: 0;
+}
+
+.animated-background li {
+  position: absolute;
+  display: block;
+  list-style: none;
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: 900; 
+  
+  /* NEON CYAN COLOR */
+  color: #00ffff; 
+  text-shadow: 0 0 8px #00ffff, 0 0 20px #00ffff;
+  
+  animation: floatUp 25s linear infinite;
+  bottom: -150px;
+  user-select: none;
+}
+
+/* Make every second floating item Neon Pink */
+.animated-background li:nth-child(even) {
+  color: #ff4fd8; 
+  text-shadow: 0 0 8px #ff4fd8, 0 0 20px #ff4fd8;
+}
+
+.animated-background li:nth-child(1) { left: 25%; font-size: 60px; animation-delay: 0s; }
+.animated-background li:nth-child(2) { left: 10%; font-size: 30px; animation-delay: 2s; animation-duration: 12s; }
+.animated-background li:nth-child(3) { left: 70%; font-size: 40px; animation-delay: 4s; }
+.animated-background li:nth-child(4) { left: 40%; font-size: 80px; animation-delay: 0s; animation-duration: 18s; }
+.animated-background li:nth-child(5) { left: 65%; font-size: 25px; animation-delay: 0s; }
+.animated-background li:nth-child(6) { left: 85%; font-size: 90px; animation-delay: 3s; }
+.animated-background li:nth-child(7) { left: 55%; font-size: 50px; animation-delay: 7s; }
+.animated-background li:nth-child(8) { left: 20%; font-size: 35px; animation-delay: 15s; animation-duration: 35s; }
+.animated-background li:nth-child(9) { left: 5%; font-size: 70px; animation-delay: 8s; animation-duration: 22s; }
+.animated-background li:nth-child(10) { left: 90%; font-size: 45px; animation-delay: 12s; animation-duration: 28s; }
+
+@keyframes floatUp {
+  0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(-1200px) rotate(360deg); opacity: 0; }
+}
+
+/* WHITE LOGIN BOX */
+.login-box{
+  position:relative;
+  width:350px;
+  padding:30px;
+  border-radius:20px;
+  border:1px solid var(--border-color);
+  background: var(--card-bg); /* White background */
+  color: var(--text-on-card); /* Black text */
+  text-align:center;
+  z-index: 10;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+}
+
+.login-box h2{ 
+  margin-top:0; 
+  margin-bottom:25px; 
+  color: var(--primary-dark); /* Dark Purple Title */
+}
+.hidden{ display:none !important; }
+
+/* INPUTS & SELECT */
+.input-box{ margin-bottom:15px; }
+.input-box input, .input-box select{
+  width:100%; 
+  padding:12px; 
+  border-radius:10px; 
+  border:1px solid var(--border-color); /* Black border */
+  background:#ffffff; 
+  color:#000000; /* Black text */
+  outline:none;
+  transition: 0.25s;
+}
+.input-box input:focus, .input-box select:focus{ 
+  box-shadow: 0 0 0 3px rgba(75, 0, 130, 0.2);
+  border-color: var(--primary-dark); 
+}
+.input-box input::placeholder{ color: #888888; }
+.input-box select option { background: #ffffff; color: #000000; }
+
+/* OPTIONS */
+.options{ display:flex; justify-content:space-between; align-items:center; font-size:12px; margin-bottom:10px; font-weight: 500;}
+.options a{ color:var(--primary-dark); text-decoration:none; font-weight: bold;}
+
+/* BUTTONS */
+.btn{
+  width:100%; 
+  padding:12px; 
+  border-radius:10px; 
+  background: var(--primary-dark); /* Dark Purple */
+  color: #ffffff; 
+  font-weight:bold; 
+  cursor:pointer; 
+  margin-top:10px;
+  border:1px solid #000000; 
+  transition: 0.3s;
+}
+.btn:hover { 
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4); 
+  transform: translateY(-2px);
+}
+.register{ 
+  background: #eeeeee; 
+  border:1px solid #000000; 
+  color: #000000; 
+}
+.register:hover {
+  background: #dddddd;
+}
+
+/* LOADER STYLES */
+.loader{
+  position:fixed; inset:0; background:rgba(0,0,0,0.85); display:none; justify-content:center; align-items:center; z-index:9999; backdrop-filter:blur(10px);
+}
+.logo-loader{ display:flex; flex-direction:column; align-items:center; justify-content:center; gap:24px; }
+.logo-box {
+  width: 150px; 
+  height: 150px; 
+  /* Removed the hardcoded white background and added the dark purple gradient */
+  background: radial-gradient(circle at 30% 30%, rgba(167,139,250,0.4), transparent 50%), rgba(30,20,60,0.6); 
+  border: 2px solid rgba(186,85,211,0.3); 
+  border-radius: 24px; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  position: relative;
+  box-shadow: 0 0 50px rgba(186,85,211,0.3), inset 0 0 30px rgba(186,85,211,0.1); 
+  animation: logoPulse 2s ease-in-out infinite;
+}
+
+@keyframes logoPulse {
+  0%, 100% { box-shadow: 0 0 50px rgba(186,85,211,0.3), inset 0 0 30px rgba(186,85,211,0.1); transform: scale(1); }
+  50% { box-shadow: 0 0 80px rgba(186,85,211,0.5), inset 0 0 50px rgba(186,85,211,0.2); transform: scale(1.05); }
+}
+
+svg.logo-svg { 
+  width: 120px; 
+  height: 120px; 
+  animation: logoFloat 2s ease-in-out infinite; 
+  filter: drop-shadow(0 0 15px rgba(186,85,211,0.5)); /* Adds a neon glow to the SVG lines */
+}
+
+/* Made the SVG lines lighter so they pop against the dark background */
+svg.logo-svg path, svg.logo-svg polygon { 
+  stroke: #BA55D3; 
+  stroke-width: 3; 
+  fill: none; 
+  stroke-linecap: round; 
+  stroke-linejoin: round; 
+}
+svg.logo-svg path:nth-child(1){ animation:drawPath 2s ease-in-out infinite; }
+svg.logo-svg path:nth-child(2){ animation:drawPath 2s ease-in-out infinite 0.3s; }
+svg.logo-svg path:nth-child(3){ animation:drawPath 2s ease-in-out infinite 0.6s; }
+@keyframes drawPath{ 0%, 100%{ stroke-dasharray:100; stroke-dashoffset:0; opacity:1; } 50%{ stroke-dasharray:100; stroke-dashoffset:10; opacity:0.8; } }
+.logo-label{ font-size:11px; letter-spacing:1px; text-transform:uppercase; color:#ffffff; font-weight:700; margin-top:8px; animation:logoFloat 2s ease-in-out infinite; }
+@keyframes logoFloat{ 0%, 100%{ transform:translateY(0); } 50%{ transform:translateY(-8px); } }
+.logo-box::after{ content:''; position:absolute; inset:-8px; border:2px solid transparent; border-top-color:var(--primary-dark); border-right-color:var(--primary-dark); border-radius:24px; animation:logoRingSpin 2s linear infinite reverse; }
+@keyframes logoRingSpin{ 100%{transform:rotate(-360deg)} }
+.loading-bar{ width:160px; height:3px; background:rgba(255,255,255,0.2); border-radius:999px; overflow:hidden; box-shadow:0 0 20px rgba(255,255,255,0.2); }
+.loading-bar::after{ content:''; display:block; width:50%; height:100%; background:linear-gradient(90deg, transparent, #ffffff, transparent); animation:loadingSlide 1.5s ease-in-out infinite; }
+@keyframes loadingSlide{ 0%{ transform:translateX(-100%); } 100%{ transform:translateX(400%); } }
+.loading-text{ font-size:14px; color:rgba(255,255,255,0.8); letter-spacing:2px; text-transform:uppercase; font-weight:600; animation:loadingDots 1.2s steps(3) infinite; }
+@keyframes loadingDots{ 0%, 20%{content:'Loading'} 40%{content:'Loading.'} 60%{content:'Loading..'} 80%, 100%{content:'Loading...'} }
+</style>
+</head>
+
+<body>
+
+<ul class="animated-background">
+  <li>&lt;/&gt;</li>
+  <li>{ }</li>
+  <li>★</li>
+  <li>[ ]</li>
+  <li>0101</li>
+  <li>*</li>
+  <li>( )</li>
+  <li>+</li>
+  <li>&lt;code&gt;</li>
+  <li>★</li>
+</ul>
+
+<div class="loader" id="loader">
+  <div class="logo-loader">
+    <div class="logo-box">
+      <svg class="logo-svg" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+        <path d="M 25 30 Q 15 45, 15 60 Q 15 75, 25 90" />
+        <path d="M 60 20 L 75 30 L 75 50 L 60 60 L 45 50 L 45 30 Z" />
+        <path d="M 95 30 L 85 30 Q 75 30, 75 60 Q 75 90, 85 90 L 95 90" />
+      </svg>
+    </div>
+    <div class="logo-label">CodeLine.AI</div>
+    <div class="loading-bar"></div>
+    <div class="loading-text">Loading</div>
+  </div>
+</div>
+
+<div class="login-box">
+
+  <div id="loginForm">
+    <h2>Codeline AI Login</h2>
+    <div class="input-box">
+      <input type="email" id="loginEmail" placeholder="Email">
+    </div>
+    <div class="input-box">
+      <input type="password" id="loginPassword" placeholder="Password">
+    </div>
+    <div class="options">
+      <label><input type="checkbox"> Remember me</label>
+      <a href="#" onclick="showForgot(); return false;">Forgot Password?</a>
+    </div>
+    <button class="btn" onclick="loginUser()">LOGIN</button>
+  </div>
+
+  <div id="forgotForm" class="hidden">
+    <h2>Reset Password</h2>
+    
+    <div id="forgotStep1">
+      <p style="font-size: 13px; margin-bottom: 20px; color: var(--text-muted-card); font-weight: 500;">Enter your registered email to receive a secure 3-minute OTP.</p>
+      <div class="input-box">
+        <input type="email" id="forgotEmail" placeholder="Registered Email">
+      </div>
+      <button class="btn" onclick="sendOtp()">SEND OTP</button>
+    </div>
+
+    <div id="forgotStep2" class="hidden">
+      <p style="font-size: 13px; margin-bottom: 20px; color: #008000; font-weight: bold;">OTP sent! It is valid for 3 minutes.</p>
+      <div class="input-box">
+        <input type="text" id="forgotOtp" placeholder="6-Digit OTP Code" maxlength="6">
+      </div>
+      <div class="input-box">
+        <input type="password" id="forgotNewPassword" placeholder="Create New Password">
+      </div>
+      <button class="btn" onclick="resetPasswordWithOtp()">VERIFY & RESET</button>
+    </div>
+
+    <button class="btn register" onclick="showLogin()">BACK TO LOGIN</button>
+  </div>
+
+</div>
+
+<script src="config.js"></script>
+
+<script>
+  // --- UI TOGGLES ---
+  function showLogin(){
+    document.getElementById("forgotForm").classList.add("hidden");
+    document.getElementById("loginForm").classList.remove("hidden");
+  }
+
+  function showForgot() {
+    document.getElementById("loginForm").classList.add("hidden");
+    document.getElementById("forgotForm").classList.remove("hidden");
+    document.getElementById("forgotStep1").classList.remove("hidden");
+    document.getElementById("forgotStep2").classList.add("hidden");
+  }
+
+  // --- LOADER & SESSION ---
+  function showLoader() { document.getElementById("loader").style.display = "flex"; }
+  function hideLoader() { document.getElementById("loader").style.display = "none"; }
+  function saveUser(user) { sessionStorage.setItem("portalUser", JSON.stringify(user)); }
+  function clearUser() { sessionStorage.removeItem("portalUser"); }
+
+  // --- AUTHENTICATION LOGIC ---
+  async function loginUser() {
+    const data = {
+      action: "loginUser",
+      email: document.getElementById("loginEmail").value.trim(),
+      password: document.getElementById("loginPassword").value.trim(),
+      userAgent: navigator.userAgent || ""
+    };
+
+    if (!data.email || !data.password) {
+      alert("Please enter email and password."); return;
+    }
+
+    if (!data.email.toLowerCase().endsWith("@gmail.com")) {
+      alert("Only @gmail.com addresses are allowed.");
+      document.getElementById("loginEmail").focus();
+      return;
+    }
+
+    showLoader();
+    try {
+      const res = await fetch(SCRIPT_URL, { method: "POST", body: new URLSearchParams(data) });
+      const result = await res.json();
+
+      if (!result.success) {
+        alert(result.message || "Login failed"); return;
+      }
+
+      clearUser();
+      saveUser(result.user);
+
+      if (result.user.role === "student") {
+        window.location.href = "student.html";
+      } else if (result.user.role === "teacher") {
+        window.location.href = "teacher.html";
+      } else if (result.user.role === "admin") {
+        window.location.href = "admin.html";
+      } else {
+        alert("Invalid role");
+      }
+    } catch (err) {
+      console.error(err); alert("Failed to connect to server.");
+    } finally { hideLoader(); }
+  }
+
+  // --- OTP & FORGOT PASSWORD LOGIC ---
+  async function sendOtp() {
+    const email = document.getElementById("forgotEmail").value.trim();
+    
+    if (!email) { alert("Please enter your registered email address."); return; }
+    if (!email.toLowerCase().endsWith("@gmail.com")) {
+      alert("Only @gmail.com addresses are allowed.");
+      document.getElementById("forgotEmail").focus();
+      return;
+    }
+
+    showLoader();
+    try {
+      const res = await fetch(SCRIPT_URL, {
+        method: "POST",
+        body: new URLSearchParams({ action: "sendOtp", email: email })
+      });
+      
+      const result = await res.json();
+      alert(result.message);
+      
+      if (result.success) {
+        // Move to Step 2
+        document.getElementById("forgotStep1").classList.add("hidden");
+        document.getElementById("forgotStep2").classList.remove("hidden");
+      }
+    } catch (err) {
+      console.error(err); alert("Failed to connect to server.");
+    } finally { hideLoader(); }
+  }
+
+  async function resetPasswordWithOtp() {
+    const email = document.getElementById("forgotEmail").value.trim();
+    const otp = document.getElementById("forgotOtp").value.trim();
+    const newPassword = document.getElementById("forgotNewPassword").value.trim();
+
+    if (!otp || !newPassword) { 
+      alert("Please enter both the OTP and your new password."); 
+      return; 
+    }
+
+    showLoader();
+    try {
+      const payload = {
+        action: "resetPasswordWithOtp",
+        email: email,
+        otp: otp,
+        newPassword: newPassword
+      };
+
+      const res = await fetch(SCRIPT_URL, { method: "POST", body: new URLSearchParams(payload) });
+      const result = await res.json();
+      
+      alert(result.message);
+      
+      if (result.success) {
+        // Clear all inputs and send them back to login
+        document.getElementById("forgotEmail").value = "";
+        document.getElementById("forgotOtp").value = "";
+        document.getElementById("forgotNewPassword").value = "";
+        showLogin(); 
+      }
+    } catch (err) {
+      console.error(err); alert("Failed to connect to server.");
+    } finally { hideLoader(); }
+  }
+
+  // --- GLOBAL ENTER KEY LISTENER ---
+  document.addEventListener('keydown', function(event) {
+    if (event.key === 'Enter') {
+      const loginForm = document.getElementById('loginForm');
+      const forgotForm = document.getElementById('forgotForm');
+      const forgotStep1 = document.getElementById('forgotStep1');
+
+      if (document.getElementById("loader").style.display === "flex") return;
+
+      if (!loginForm.classList.contains('hidden')) {
+        loginUser(); 
+      } else if (!forgotForm.classList.contains('hidden')) {
+        // Check which step of the forgot flow they are on
+        if (!forgotStep1.classList.contains('hidden')) {
+          sendOtp();
+        } else {
+          resetPasswordWithOtp();
+        }
+      }
+    }
+  });
+</script>
+</body>
+</html>

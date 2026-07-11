@@ -1,0 +1,1816 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Student Portal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <style>
+  :root {
+    --accent: #8A2BE2;
+    --sidebar-bg: rgba(75, 0, 130, 0.92);
+    --btn-bg: #9400D3;
+    --white: #ffffff;
+    --text-dark: #111;
+    --table-head: #4B0082;
+    --table-head-text: #ffffff;
+    --success: #16a34a;
+    --danger: #dc2626;
+    --primary: #9932CC;
+    --warning: #f59e0b;
+    --shadow: 0 12px 30px rgba(0,0,0,0.25);
+  }
+
+  *{
+    box-sizing:border-box;
+    font-family:Segoe UI,sans-serif;
+    -webkit-tap-highlight-color: transparent; 
+  }
+
+  html, body {
+    margin:0;
+    padding: 0;
+    background:linear-gradient(135deg, #4B0082, #8A2BE2, #9400D3);
+    min-height:100vh;
+    color:#fff;
+    max-width: 100vw;
+    overflow-x: hidden;
+  }
+
+  /* --- NAVBAR --- */
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(75, 0, 130, 0.95);
+    padding: 10px 20px;
+    border-bottom: 1px solid var(--accent);
+    box-shadow: var(--shadow);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    backdrop-filter: blur(10px);
+  }
+
+  .nav-brand-wrap {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #ffffff;
+    font-size: 20px;
+    font-weight: 800;
+  }
+
+  .nav-logo {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    object-fit: contain;
+    box-shadow: 0 0 8px rgba(138, 43, 226, 0.3);
+  }
+
+  .mobile-menu-btn {
+    display: none;
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 26px;
+    cursor: pointer;
+  }
+
+  /* --- NAV BUTTONS --- */
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .nav-link-btn {
+    background: rgba(138, 43, 226, 0.1);
+    color: #e9d5ff;
+    border: 1px solid #c084fc;
+    padding: 8px 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 13px;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+
+  .nav-link-btn:hover:not(:disabled) {
+    background: rgba(138, 43, 226, 0.2);
+    box-shadow: 0 0 10px rgba(138, 43, 226, 0.4);
+  }
+
+  .nav-link-btn.active-tab {
+    background: var(--accent);
+    color: #fff;
+    box-shadow: 0 0 10px rgba(138, 43, 226, 0.5);
+  }
+
+  .nav-link-btn:disabled {
+    background: #333;
+    color: #888;
+    border-color: #555;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+
+  .logout-btn{
+    background:transparent;
+    color:#ff8a8a;
+    border:1px solid #ff8a8a;
+    padding:8px 16px;
+    border-radius:8px;
+    font-weight:700;
+    cursor:pointer;
+    font-size:13px;
+    transition: 0.2s;
+  }
+
+  .logout-btn:hover { background: rgba(255, 138, 138, 0.1); }
+  
+  .nav-link-btn:active, .logout-btn:active { transform: scale(0.95); }
+
+  .container{
+    max-width:1250px;
+    margin:auto;
+    padding: 20px;
+  }
+
+  /* GLASS CARD FOR PROFILE */
+  .glass-card{
+    background:rgba(75, 0, 130, 0.4);
+    backdrop-filter:blur(12px);
+    border: 1px solid rgba(138, 43, 226, 0.3);
+    border-radius:16px;
+    padding:20px;
+    box-shadow:var(--shadow);
+    margin-bottom: 20px;
+  }
+
+  .profile-box h2{
+    margin:0 0 15px 0;
+    font-size:24px;
+    color: #ffffff;
+    text-shadow: 0 0 8px rgba(138, 43, 226, 0.6);
+  }
+
+  .profile-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+    gap:12px;
+  }
+
+  .info {
+    background: rgba(138, 43, 226, 0.14);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(186, 85, 211, 0.24);
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.03);
+    padding:12px 15px;
+    border-radius:10px;
+    color:var(--white);
+    font-size:16px;
+    font-weight: bold;
+    line-height:1.4;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .info:active { transform: scale(0.97); }
+
+  .info b{
+    display:block;
+    font-size:12px;
+    margin-bottom:4px;
+    color:#e9d5ff !important;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .profile-extra-grid .info b,
+  .fees-summary-grid .info b,
+  .profile-photo-actions small b {
+    color: #e9d5ff !important;
+  }
+
+  /* TWO COLUMN BOTTOM GRID */
+  .two-col-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 20px;
+  }
+
+  .two-col-grid > .table-box {
+    min-width: 0;
+  }
+
+  /* TABLE BOX */
+  .table-box{
+    background:var(--white);
+    color:var(--text-dark);
+    padding:20px;
+    border-radius:16px;
+    box-shadow:var(--shadow);
+    min-width:0;
+    transition: transform 0.15s ease;
+  }
+
+  .table-box h3 {
+    margin-top:0;
+    margin-bottom: 15px;
+    color:#111;
+    font-size: 20px;
+  }
+
+  .table-wrap{
+    max-height:60vh;
+    overflow-x:auto;
+    border-radius:12px;
+    max-width:100%;
+    min-width:0;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .scroll-table{
+    max-width:100%;
+    min-width:0;
+    overflow-x:auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    white-space: nowrap;
+    border: 1px solid #e5e7eb;
+  }
+
+  th, td {
+    padding: 12px 10px;
+    text-align: center; 
+    font-size: 13px;
+    border: 1px solid #e5e7eb; 
+  }
+
+  th {
+    background: var(--table-head); 
+    color: var(--table-head-text); 
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    font-weight: 700;
+    border: 1px solid #374151; 
+  }
+
+  /* SOFT-GLOW BADGES */
+  .status-badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 800;
+    display: inline-block;
+  }
+  .status-success { background: rgba(22, 163, 74, 0.15); color: #16a34a; }
+  .status-warning { background: rgba(245, 158, 11, 0.15); color: #d97706; }
+  .status-danger { background: rgba(220, 38, 38, 0.15); color: #dc2626; }
+
+  .late{
+    color:var(--danger);
+    font-weight:700;
+  }
+
+  .download-btn{
+    background:var(--primary);
+    color:var(--white);
+    padding:6px 12px;
+    border-radius:8px;
+    text-decoration:none;
+    display:inline-block;
+    font-weight:600;
+    font-size:12px;
+    transition: 0.2s;
+  }
+
+  .download-btn:hover { opacity: 0.85; }
+  .download-btn:active { transform: scale(0.95); }
+
+  .pay-btn-inline {
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+    transition: 0.2s;
+    box-shadow: 0 4px 6px rgba(138, 43, 226, 0.2);
+  }
+  
+  .pay-btn-inline:hover {
+    box-shadow: 0 0 10px rgba(138, 43, 226, 0.5);
+    transform: translateY(-2px);
+  }
+  .pay-btn-inline:active { transform: scale(0.95); }
+
+  /* --- COMBINED ACADEMICS DASHBOARD CSS --- */
+  #academicsDashboard {
+    color: #1f2937;
+    animation: fadeIn 0.3s ease;
+  }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  
+  .result-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f9fafb;
+    padding: 20px 25px;
+    border-radius: 16px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+  }
+  .result-header h1 { margin: 0 0 5px 0; font-size: 24px; color: #111; }
+  .result-header p { margin: 0; font-size: 13px; color: #6b7280; }
+  
+  .result-btn-filled {
+    background: var(--accent); border: 1px solid var(--accent); color: #fff;
+    padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: bold;
+    transition: 0.2s;
+  }
+  .result-btn-filled:active { transform: scale(0.95); }
+  
+  .result-card {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    border: 1px solid #f3f4f6;
+    margin-bottom: 20px;
+    transition: transform 0.15s ease;
+  }
+  .result-card:active { transform: scale(0.98); }
+  
+  .res-score-box { text-align: center; }
+  .res-score-box h3 { margin: 0; color: #6b7280; font-size: 14px; }
+  .res-score-box h1 { margin: 5px 0; font-size: 38px; color: #10b981; }
+  .res-score-box h1 span { font-size: 20px; color: #9ca3af; }
+  
+  .res-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; }
+  .badge-green { background: #dcfce7; color: #16a34a; }
+  
+  .donut-container { display: flex; align-items: center; gap: 30px; margin-top: 15px; }
+  .donut-chart { width: 140px; height: 140px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: background 0.5s ease;}
+  .donut-inner { width: 100px; height: 100px; border-radius: 50%; background: #fff; display: flex; align-items: center; justify-content: center; flex-direction: column; box-shadow: inset 0 0 10px rgba(0,0,0,0.05);}
+  .donut-inner h2 { margin: 0; font-size: 24px; color: #111; }
+  .donut-inner span { font-size: 12px; color: #6b7280; font-weight: bold;}
+  
+  .legend-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #4b5563; margin-bottom: 8px; }
+  .legend-dot { width: 12px; height: 12px; border-radius: 50%; }
+
+  .res-bottom-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
+  
+  .res-table-wrap {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    display: block;
+  }
+  
+  .res-table { width: 100%; border-collapse: collapse; text-align: left; }
+  .res-table th { background: #f9fafb; color: #374151; padding: 12px; font-size: 13px; border: none; border-bottom: 1px solid #e5e7eb; }
+  .res-table td { padding: 12px; font-size: 13px; border: none; border-bottom: 1px solid #e5e7eb; color: #111; }
+  
+  .scroll-list-wrap {
+    max-height: 250px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 5px;
+  }
+  .list-item { display: flex; align-items: center; gap: 10px; font-size: 13px; color: #374151; margin-bottom: 10px; }
+
+  /* --- POPUP STYLES --- */
+  .popup-overlay{ display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); backdrop-filter: blur(4px); z-index:999; }
+  .popup{ display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); width:min(90%,400px); background:var(--white); color:var(--text-dark); border-radius:16px; padding:24px; z-index:1000; box-shadow:var(--shadow); }
+  .popup-header{ display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+  .popup-header h3 { margin:0; color: #111; }
+  .close-btn{ width:32px; height:32px; border:none; border-radius:50%; background:var(--accent); color:var(--white); font-size:18px; font-weight:700; cursor:pointer; }
+
+  /* --- CUSTOM LOADER --- */
+  .loader{
+    position:fixed;
+    inset:0;
+    background:rgba(10,5,25,0.85);
+    display:none;
+    justify-content:center;
+    align-items:center;
+    z-index:9999;
+    backdrop-filter:blur(10px);
+  }
+
+  .logo-loader{ display:flex; flex-direction:column; align-items:center; justify-content:center; gap:24px; }
+  .logo-box{ width:150px; height:150px; background: radial-gradient(circle at 30% 30%, rgba(186, 85, 211, 0.4), transparent 50%), rgba(75, 0, 130, 0.6); border:2px solid rgba(138, 43, 226, 0.3); border-radius:24px; display:flex; align-items:center; justify-content:center; position:relative; box-shadow: 0 0 50px rgba(138, 43, 226, 0.3), inset 0 0 30px rgba(138, 43, 226, 0.1); animation:logoPulse 2s ease-in-out infinite; }
+  @keyframes logoPulse{ 0%, 100%{ box-shadow: 0 0 50px rgba(138, 43, 226, 0.3), inset 0 0 30px rgba(138, 43, 226, 0.1); transform:scale(1); } 50%{ box-shadow: 0 0 80px rgba(138, 43, 226, 0.5), inset 0 0 50px rgba(138, 43, 226, 0.2); transform:scale(1.05); } }
+  svg.logo-svg{ width:120px; height:120px; animation:logoFloat 2s ease-in-out infinite; filter:drop-shadow(0 0 15px rgba(138, 43, 226, 0.5)); }
+  svg.logo-svg path, svg.logo-svg polygon{ stroke:#BA55D3; stroke-width:3; fill:none; stroke-linecap:round; stroke-linejoin:round; }
+  svg.logo-svg path:nth-child(1){ animation:drawPath 2s ease-in-out infinite; }
+  svg.logo-svg path:nth-child(2){ animation:drawPath 2s ease-in-out infinite 0.3s; }
+  svg.logo-svg path:nth-child(3){ animation:drawPath 2s ease-in-out infinite 0.6s; }
+  @keyframes drawPath{ 0%, 100%{ stroke-dasharray:100; stroke-dashoffset:0; opacity:1; } 50%{ stroke-dasharray:100; stroke-dashoffset:10; opacity:0.8; } }
+  .logo-label{ font-size:11px; letter-spacing:1px; text-transform:uppercase; color:#BA55D3; font-weight:700; margin-top:8px; animation:logoFloat 2s ease-in-out infinite; }
+  @keyframes logoFloat{ 0%, 100%{ transform:translateY(0); } 50%{ transform:translateY(-8px); } }
+  .logo-box::before{ content:''; position:absolute; inset:0; border-radius:24px; background:conic-gradient(from 0deg,#BA55D3,#8A2BE2,#BA55D3); opacity:0.1; animation:logoSpin 3s linear infinite; }
+  .logo-box::after{ content:''; position:absolute; inset:-8px; border:2px solid transparent; border-top-color:#BA55D3; border-right-color:#BA55D3; border-radius:24px; animation:logoRingSpin 2s linear infinite reverse; }
+  @keyframes logoSpin{ 100%{transform:rotate(360deg)} } @keyframes logoRingSpin{ 100%{transform:rotate(-360deg)} }
+  .loading-bar{ width:160px; height:3px; background:rgba(138, 43, 226, 0.2); border-radius:999px; overflow:hidden; box-shadow:0 0 20px rgba(138, 43, 226, 0.2); }
+  .loading-bar::after{ content:''; display:block; width:50%; height:100%; background:linear-gradient(90deg, transparent, #BA55D3, transparent); animation:loadingSlide 1.5s ease-in-out infinite; }
+  @keyframes loadingSlide{ 0%{ transform:translateX(-100%); } 100%{ transform:translateX(400%); } }
+  .loading-text{ font-size:14px; color:rgba(255,255,255,0.68); letter-spacing:2px; text-transform:uppercase; font-weight:600; animation:loadingDots 1.2s steps(3) infinite; }
+  @keyframes loadingDots{ 0%, 20%{content:'Loading'} 40%{content:'Loading.'} 60%{content:'Loading..'} 80%, 100%{content:'Loading...'} }
+
+  @media (max-width:1000px){
+    .two-col-grid, .res-bottom-grid { grid-template-columns: 1fr; }
+  }
+
+  /* =====================================================
+     MOBILE-ONLY ENHANCEMENTS & GRID LOCKS
+     ===================================================== */
+  @media (max-width:768px){
+    body, html { 
+      padding: 0px; 
+      max-width: 100vw;
+      overflow-x: hidden !important; 
+    }
+    
+    .container { 
+      padding: 10px; 
+      width: 100%;
+      box-sizing: border-box;
+      overflow-x: hidden !important; 
+    }
+    
+    /* Navbar & Hamburger Fix */
+    .navbar {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .nav-brand-wrap {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .mobile-menu-btn {
+      display: block !important;
+    }
+    .nav-actions {
+      display: none; /* Hidden until clicked */
+      width: 100%;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .nav-actions.active {
+      display: flex !important;
+    }
+    .nav-link-btn, .logout-btn {
+      width: 100%;
+      text-align: left;
+      padding: 10px 15px;
+      font-size: 14px;
+    }
+
+    /* Original Dark Cards Layout */
+    .glass-card{ padding:15px; }
+    .profile-box h2 { font-size: 20px; }
+    .profile-grid{ grid-template-columns:1fr; gap:10px; }
+    .profile-photo-card{ grid-template-columns: 1fr !important; gap: 12px; padding: 14px; }
+    .profile-identity-wrap{ flex-direction: column; align-items: flex-start; text-align: left; gap: 12px; width: 100%; }
+    .profile-photo-left{ margin: 0 auto 0 0; }
+    .profile-photo-actions{ width: 100%; }
+    
+    /* PERFECT 2X2 GRID FOR STATS */
+    .profile-extra-grid, .fees-summary-grid { 
+      grid-template-columns: 1fr 1fr !important; 
+      gap: 10px !important; 
+    }
+    
+    .info{ padding:10px; font-size:14px; width: 100%; }
+    
+    /* TRAP TABLES SO THEY DON'T PUSH SCREEN */
+    .table-box, .result-card {
+      width: 100%;
+      max-width: 100%;
+      box-sizing: border-box;
+      overflow: hidden !important; 
+    }
+
+    /* HORIZONTAL SCROLL BARS ONLY ON THE DATA */
+    .table-wrap, .scroll-table, .res-table-wrap { 
+      width: 100%; 
+      max-width: 100%; 
+      overflow-x: auto !important; 
+      display: block !important; 
+      -webkit-overflow-scrolling: touch; 
+      padding-bottom: 10px; 
+    }
+    
+    table { min-width: 500px !important; } 
+
+    /* Custom Mobile Scrollbars */
+    .table-wrap::-webkit-scrollbar, .res-table-wrap::-webkit-scrollbar, .scroll-list-wrap::-webkit-scrollbar { height: 5px; width: 5px; }
+    .table-wrap::-webkit-scrollbar-track, .res-table-wrap::-webkit-scrollbar-track, .scroll-list-wrap::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); border-radius: 10px; }
+    .table-wrap::-webkit-scrollbar-thumb, .res-table-wrap::-webkit-scrollbar-thumb, .scroll-list-wrap::-webkit-scrollbar-thumb { background: rgba(138, 43, 226, 0.6); border-radius: 10px; }
+
+    th,td{ font-size:12px; padding:8px; }
+    .result-header { flex-direction: column; gap: 15px; text-align: center; }
+  }
+
+  /* =====================================================
+     POPUP STYLES
+     ===================================================== */
+  .due-reminder-overlay { display: none; position: fixed; inset: 0; z-index: 15000; background: radial-gradient(circle at top, rgba(138, 43, 226, 0.20), transparent 35%), rgba(0, 0, 0, 0.88); backdrop-filter: blur(8px); align-items: center; justify-content: center; padding: 20px; }
+  .due-reminder-card { width: min(95%, 520px); background: #ffffff; color: #111827; border-radius: 22px; padding: 28px; text-align: center; border: 3px solid var(--accent); box-shadow: 0 0 35px rgba(138, 43, 226, 0.45); animation: duePopIn 0.25s ease-out; }
+  @keyframes duePopIn { from { transform: scale(0.92); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  .due-reminder-icon { width: 78px; height: 78px; margin: 0 auto 16px; border-radius: 50%; background: rgba(220, 38, 38, 0.12); display: flex; align-items: center; justify-content: center; font-size: 42px; }
+  .due-reminder-card h2 { margin: 0 0 10px; color: #dc2626; font-size: 26px; }
+  .due-reminder-card p { margin: 8px 0; color: #374151; font-size: 15px; line-height: 1.5; }
+  .due-reminder-details { margin: 18px 0; background: #fff7ed; border: 1px solid #fed7aa; border-radius: 14px; padding: 15px; text-align: left; }
+  .due-reminder-row { display: flex; justify-content: space-between; gap: 12px; padding: 8px 0; border-bottom: 1px solid #fed7aa; font-size: 14px; }
+  .due-reminder-row:last-child { border-bottom: none; }
+  .due-reminder-row b { color: #111827; }
+  .due-reminder-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 20px; }
+  .due-pay-now-btn { border: none; background: var(--primary); color: white; padding: 12px 24px; border-radius: 999px; font-weight: 800; cursor: pointer; }
+  .due-close-btn { border: 1px solid #9ca3af; background: #f3f4f6; color: #111827; padding: 12px 24px; border-radius: 999px; font-weight: 800; cursor: pointer; }
+
+  .wifi-pass-wrap { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+  .wifi-password-text { word-break: break-all; font-size: 12px; line-height: 1.2; }
+  .wifi-toggle-btn { background: rgba(138, 43, 226, 0.15); color: #e9d5ff; border: 1px solid #c084fc; border-radius: 7px; padding: 5px 9px; font-size: 11px; font-weight: 800; cursor: pointer; white-space: nowrap; }
+  .wifi-toggle-btn:hover { box-shadow: 0 0 8px rgba(138, 43, 226, 0.35); }
+
+  .course-download-btn { display: inline-block; margin-top: 6px; background: var(--primary); color: #fff; padding: 8px 12px; border-radius: 8px; text-decoration: none; font-size: 12px; font-weight: 800; transition: 0.2s; }
+  .course-download-btn:hover { opacity: 0.85; box-shadow: 0 0 8px rgba(138, 43, 226, 0.35); }
+  .course-download-disabled { display: inline-block; margin-top: 6px; color: #fca5a5; font-size: 12px; font-weight: 800; }
+  .course-name-link { display: inline-flex; align-items: center; gap: 6px; margin-top: 4px; color: #ffffff; background: var(--primary); border: 1px solid var(--accent); padding: 7px 11px; border-radius: 8px; text-decoration: none; font-size: 13px; font-weight: 800; line-height: 1.25; box-shadow: 0 0 8px rgba(138, 43, 226, 0.25); }
+  .course-name-link:hover { opacity: 0.9; box-shadow: 0 0 12px rgba(138, 43, 226, 0.45); }
+  .course-name-plain { display: inline-block; margin-top: 4px; font-weight: 800; }
+  
+  .profile-photo-card { display: grid; grid-template-columns: minmax(260px, 340px) 1fr; align-items: stretch; gap: 18px; background: rgba(138, 43, 226, 0.16); backdrop-filter: blur(14px); border: 1px solid rgba(186, 85, 211, 0.28); box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04); padding: 16px; border-radius: 14px; margin-bottom: 15px; }
+  .profile-identity-wrap { display: flex; align-items: center; gap: 18px; min-width: 0; }
+  .profile-extra-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; align-content: stretch; }
+  .fees-summary-grid { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(5, minmax(160px, 1fr)); gap: 12px; }
+  .profile-photo-left { position: relative; width: 105px; height: 105px; flex: 0 0 105px; }
+  .profile-photo-img { width: 105px; height: 105px; border-radius: 50%; object-fit: cover; border: 3px solid var(--accent); background: #111; box-shadow: 0 0 14px rgba(138, 43, 226, 0.45); }
+  .profile-photo-actions { display: flex; flex-direction: column; gap: 8px; }
+  .change-photo-btn { position: absolute; left: -8px; bottom: 4px; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; background: var(--accent); color: white; border: 2px solid #fff; border-radius: 50%; font-size: 16px; font-weight: 800; cursor: pointer; box-shadow: 0 0 10px rgba(138, 43, 226, 0.55); line-height: 1; }
+  .change-photo-btn:hover { opacity: 0.9; transform: scale(1.05); }
+
+</style>
+</head>
+<body>
+
+  <div class="loader" id="loader">
+    <div class="logo-loader">
+      <div class="logo-box">
+        <svg class="logo-svg" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+          <path d="M 25 30 Q 15 45, 15 60 Q 15 75, 25 90" />
+          <path d="M 60 20 L 75 30 L 75 50 L 60 60 L 45 50 L 45 30 Z" />
+          <path d="M 95 30 L 85 30 Q 75 30, 75 60 Q 75 90, 85 90 L 95 90" />
+        </svg>
+        <div class="logo-label">CodeLine.AI</div>
+      </div>
+      <div class="loading-bar"></div>
+      <div class="loading-text">Loading</div>
+    </div>
+  </div>
+
+  <!-- TOP NAVBAR -->
+  <div class="navbar">
+    <div class="nav-brand-wrap">
+      <div class="nav-brand">
+        <img src="logo.jpeg" alt="Logo" class="nav-logo">
+        <span>CodeLine AI</span>
+      </div>
+      <!-- Hamburger Menu Button restored -->
+      <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+    </div>
+    <div class="nav-actions" id="navActionsMenu">
+      <button onclick="switchTab('dashboard'); toggleMobileMenu();" class="nav-link-btn active-tab" id="tabDashboard">🏠 Dashboard</button>
+      <button onclick="switchTab('academics'); toggleMobileMenu();" class="nav-link-btn" id="tabAcademics">🎓 Academics & Performance</button>
+      <button onclick="document.getElementById('complaintModal').style.display='flex'; toggleMobileMenu();" class="nav-link-btn" style="background:var(--warning); color:#fff; border:none; box-shadow:0 0 8px rgba(245, 158, 11, 0.5);">💬 Raise Complains</button>
+      <button id="btnApplyCert" onclick="applyForCertificate(); toggleMobileMenu();" class="nav-link-btn" disabled style="opacity:0.5;">🎓 Apply for Certificate</button>
+      <button id="btnViewCert" onclick="viewCertificate(); toggleMobileMenu();" class="nav-link-btn" style="display:none; background:var(--success); color:#fff; border-color:var(--success);">📄 View Certificate</button>
+      <a href="https://asterisc.in/rules.html" target="_blank" class="nav-link-btn">📜 Rules & Regulations</a>
+      <button class="logout-btn" onclick="logout()">🚪 Logout</button>
+    </div>
+  </div>
+
+  <div class="container" id="swipeContainer">
+    
+    <!-- MAIN DASHBOARD CONTENT -->
+    <div id="mainDashboard">
+        <div class="glass-card">
+            <div class="profile-box">
+              <h2 id="studentName">Student Dashboard</h2>
+              <div class="profile-grid" id="studentProfile"></div>
+              <input type="file" id="profilePhotoInput" accept="image/*" style="display:none;" onchange="uploadStudentProfilePhoto(event)">
+            </div>
+        </div>
+
+       <div id="marqueeContainer" style="display:none; background: #fff; padding: 8px 15px; border-radius: 8px; margin-bottom: 20px; border-left: 5px solid var(--accent); box-shadow: var(--shadow); overflow: hidden;">
+        </div>
+        <div class="table-box">
+          <h3>Payment History</h3>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Sr No</th>
+                  <th>Installment / Admission</th>
+                  <th>Amount pay</th>
+                  <th>Payment Date</th>
+                  <th>Payment Status</th>
+                  <th>Payment Mode</th>
+                  <th>Late Fee</th>
+                  <th>Receipt No</th>
+                  <th>Download / Action</th>
+                </tr>
+              </thead>
+              <tbody id="historyBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="two-col-grid">
+          
+          <div class="table-box">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+              <h3 style="margin-bottom: 0;">📅 Attendance Quick View</h3>
+              <div id="attendanceSummary" style="font-size: 14px; font-weight: bold; background: #f9fafb; padding: 6px 12px; border-radius: 8px; border: 1px solid #e5e7eb;">
+                <span style="color: #16a34a;">Present: 0</span> | <span style="color: #dc2626;">Absent: 0</span>
+              </div>
+            </div>
+            <div class="table-wrap scroll-table" style="max-height: 250px;">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Topic</th>
+                  </tr>
+                </thead>
+                <tbody id="attendanceTableBodyQuick">
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="table-box">
+            <h3>⚖️ Fee & Admission Policy</h3>
+            <div class="table-wrap scroll-table" style="max-height: 250px;">
+              <table>
+                <thead>
+                  <tr>
+                    <th style="text-align: left; border-bottom: 2px solid #ccc;">Duration / Condition</th>
+                    <th style="text-align: left; border-bottom: 2px solid #ccc;">Charges / Action</th>
+                  </tr>
+                </thead>
+                <tbody id="admissionPolicyBody">
+                  <tr>
+                    <td style="text-align: left; padding: 16px 10px;">Up to Due Date</td>
+                    <td style="text-align: left; padding: 16px 10px;">Normal Fees (no extra charge)</td>
+                  </tr>
+                  <tr>
+                    <td style="text-align: left; padding: 16px 10px;">First 5 Days After Due Date</td>
+                    <td style="text-align: left; padding: 16px 10px;">₹50 Late Fee</td>
+                  </tr>
+                  <tr>
+                    <td style="text-align: left; padding: 16px 10px;">Next 5 Days</td>
+                    <td style="text-align: left; padding: 16px 10px;">₹100 Late Fee</td>
+                  </tr>
+                  <tr>
+                    <td style="text-align: left; padding: 16px 10px;">After 10 Days (No Payment)</td>
+                    <td style="text-align: left; padding: 16px 10px; color:var(--warning); font-weight:bold;">Classes will be stopped</td>
+                  </tr>
+                  <tr>
+                    <td style="text-align: left; padding: 16px 10px;">After That</td>
+                    <td style="text-align: left; padding: 16px 10px; color:var(--danger); font-weight:bold;">Admission will be cancelled</td>
+                  </tr>
+                  <tr>
+                    <td style="text-align: left; padding: 16px 10px;">Rejoining</td>
+                    <td style="text-align: left; padding: 16px 10px;">Re-admission required for next 5 days</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+    </div>
+    <!-- END MAIN DASHBOARD -->
+
+    <!-- UNIFIED ACADEMICS DASHBOARD -->
+    <div id="academicsDashboard" style="display:none;">
+      
+      <div class="result-header">
+        <div>
+          <h1>Academics & Performance Dashboard</h1>
+          <p>LMS Engine &gt; Unified View</p>
+        </div>
+        <div style="display:flex; gap:10px;">
+          <button class="result-btn-filled" onclick="switchTab('dashboard')">⬅ Back to Dashboard</button>
+        </div>
+      </div>
+
+      <!-- ROW 1: ATTENDANCE & RESULTS SUMMARY -->
+      <div class="two-col-grid" style="margin-top: 0; align-items: stretch;">
+        
+        <!-- Graphical Attendance -->
+        <div class="result-card" style="margin-bottom:0; display:flex; flex-direction:column; justify-content:center;">
+          <h3 style="margin:0 0 10px; font-size:16px;">Attendance Overview</h3>
+          <div class="donut-container" style="justify-content: center; gap: 40px; margin-top: 20px;">
+            <!-- This inline CSS background is dynamically overwritten in JS based on percentage -->
+            <div class="donut-chart" id="attendanceDonutChart" style="background: conic-gradient(#10b981 0% 0%, #ef4444 0% 100%);">
+              <div class="donut-inner">
+                <h2 id="attPercentText">0%</h2>
+                <span>Present</span>
+              </div>
+            </div>
+            <div>
+              <div class="legend-item"><div class="legend-dot" style="background:#10b981;"></div> Present <span id="attPresentCount" style="margin-left:auto; font-weight:bold;">0</span></div>
+              <div class="legend-item"><div class="legend-dot" style="background:#ef4444;"></div> Absent <span id="attAbsentCount" style="margin-left:auto; font-weight:bold;">0</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Exam Results Summary Placeholder -->
+        <div class="result-card" style="margin-bottom:0; display: flex; align-items: center; justify-content: space-around;">
+           <div class="res-score-box" style="border:none;">
+             <h3>Latest Exam Score</h3>
+             <h1><span id="resScoreText">87</span><span>/<span id="resScoreTotal">100</span></span></h1>
+             <span id="resGradeBadge" class="res-badge badge-green" style="margin-bottom: 8px;">Grade: A</span>
+             <br>
+             <span id="resStatusText" style="font-size:12px; font-weight:bold; color:#16a34a;">✔ Status: Pass</span>
+           </div>
+           <div style="text-align:center;">
+             <div style="width: 50px; height: 50px; background: #f3e8ff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; margin: 0 auto 10px;">🏆</div>
+             <h3 style="margin:0; color:#6b7280; font-size:14px;">Rank</h3>
+             <h2 id="resRankText" style="margin:5px 0; color:#111; font-size:24px;">3 / 28</h2>
+             <span style="font-size:12px; color:#6b7280;">Percentile</span>
+             <h4 id="resPercentileText" style="margin:2px 0 0; color:#111;">90.25%</h4>
+           </div>
+        </div>
+      </div>
+
+      <!-- ROW 2: DETAILED RESULTS -->
+      <div class="res-bottom-grid" style="margin-top: 20px;">
+        <div class="result-card" style="margin-bottom:0;">
+          <h3 style="margin:0 0 15px; font-size:16px;">Subject Wise Performance</h3>
+          
+          <!-- HORIZONTAL SCROLL WRAPPER -->
+          <div class="res-table-wrap">
+            <table class="res-table">
+              <thead>
+                <tr>
+                  <th>Subject</th>
+                  <th>Total Marks</th>
+                  <th>Obtained Marks</th>
+                  <th>Percentage</th>
+                  <th>Performance</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Java Basics</td><td>25</td><td>23</td><td>92%</td><td><span style="color:#10b981; font-weight:bold;">Excellent</span></td>
+                </tr>
+                <tr>
+                  <td>OOPs Concept</td><td>25</td><td>21</td><td>84%</td><td><span style="color:#3b82f6; font-weight:bold;">Good</span></td>
+                </tr>
+                <tr>
+                  <td>Collections</td><td>25</td><td>20</td><td>80%</td><td><span style="color:#3b82f6; font-weight:bold;">Good</span></td>
+                </tr>
+                <tr>
+                  <td>Exception Handling</td><td>25</td><td>23</td><td>92%</td><td><span style="color:#10b981; font-weight:bold;">Excellent</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+
+        <div class="result-card" style="margin-bottom:0;">
+          <h3 style="margin:0 0 15px; font-size:16px;">Strengths & Weaknesses</h3>
+          
+          <!-- VERTICAL SCROLL WRAPPER -->
+          <div class="scroll-list-wrap">
+            <h4 style="margin:0 0 10px; font-size:13px; color:#10b981;">Strengths</h4>
+            <div class="list-item"><span style="color:#10b981;">✔</span> Java Basics</div>
+            <div class="list-item"><span style="color:#10b981;">✔</span> Exception Handling</div>
+            <div class="list-item"><span style="color:#10b981;">✔</span> OOPs Concept</div>
+            
+            <h4 style="margin:20px 0 10px; font-size:13px; color:#ef4444;">Weaknesses</h4>
+            <div class="list-item"><span style="color:#ef4444;">✘</span> Collections Framework</div>
+          </div>
+
+          <!-- DYNAMIC G-SHEET DEEP LINK BUTTON -->
+          <a id="detailedAnalysisBtn" href="#" target="_blank" class="result-btn-filled" style="width:100%; margin-top:15px; display:flex; justify-content:space-between; text-decoration:none; box-sizing:border-box;">
+            View Detailed Analysis (Open Sheet) <span>&gt;</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- ROW 3: ASSIGNMENTS & MOCK INTERVIEWS PLACEHOLDERS -->
+      <div class="two-col-grid">
+          <div class="result-card" style="text-align:center; padding: 40px 20px; margin-bottom:0;">
+            <div style="font-size:48px; margin-bottom:15px;">📝</div>
+            <h2>Assignments Tracker</h2>
+            <p style="color:#6b7280; margin-top:8px; font-size: 14px;">
+              Your technical assignments, project portals, and grading pipelines are being integrated. The portal link will be live shortly!
+            </p>
+          </div>
+
+          <div class="result-card" style="text-align:center; padding: 40px 20px; margin-bottom:0;">
+            <div style="font-size:48px; margin-bottom:15px;">🤝</div>
+            <h2>Placement Mock Interviews</h2>
+            <p style="color:#6b7280; margin-top:8px; font-size: 14px;">
+              Your upcoming technical mock sessions, corporate review files, and performance criteria logs are being wired. Stay tuned!
+            </p>
+          </div>
+      </div>
+
+    </div>
+    <!-- END ACADEMICS DASHBOARD -->
+
+  </div>
+
+  <!-- POPUPS -->
+  <div class="popup-overlay" id="qrOverlay" onclick="closePopup()"></div>
+  <div class="popup" id="qrPopup">
+    <div class="popup-header">
+      <h3>Pay Next Installment</h3>
+      <button class="close-btn" onclick="closePopup()">×</button>
+    </div>
+    <div style="text-align:center; padding: 10px;">
+      <p style="font-size:15px; margin-bottom:15px; color:#555;">Scan the QR code below to securely pay <b>₹<span id="qrAmount">0</span></b></p>
+      
+      <div style="background: #f9fafb; padding: 15px; border-radius: 12px; display:inline-block; border: 1px solid #e5e7eb; margin-bottom: 20px;">
+        <img id="qrImage" src="" alt="QR Code" style="width:200px; height:200px; border-radius:10px;">
+      </div>
+      
+      <br>
+      <a id="downloadQrBtn" href="#" download="CodeLine_Payment_QR.png" class="download-btn" style="padding: 12px 24px; font-size:14px; border-radius: 20px;">⬇️ Download QR Code</a>
+    </div>
+  </div>
+
+  <div class="due-reminder-overlay" id="dueReminderOverlay">
+    <div class="due-reminder-card">
+      <div class="due-reminder-icon">⚠️</div>
+
+      <h2>Installment Reminder</h2>
+
+      <p>
+        Your monthly installment is due. Please complete your payment to avoid late fees
+        or class restrictions.
+      </p>
+
+      <div class="due-reminder-details">
+        <div class="due-reminder-row">
+          <span>Student</span>
+          <b id="dueStudentName">-</b>
+        </div>
+
+        <div class="due-reminder-row">
+          <span>Course</span>
+          <b id="dueCourseName">-</b>
+        </div>
+
+        <div class="due-reminder-row">
+          <span>Due Date</span>
+          <b id="dueReminderDate">-</b>
+        </div>
+
+        <div class="due-reminder-row">
+          <span>Amount Due</span>
+          <b>₹<span id="dueReminderAmount">0</span></b>
+        </div>
+
+        <div class="due-reminder-row">
+          <span>Late Days</span>
+          <b id="dueReminderLateDays">0</b>
+        </div>
+      </div>
+
+      <p style="font-weight:700; color:#dc2626;">
+        If you have already paid, please wait for admin approval.
+      </p>
+
+      <div class="due-reminder-actions">
+        <button class="due-pay-now-btn" onclick="payFromDueReminder()">Pay Now</button>
+        <button class="due-close-btn" onclick="closeDueReminder()">I Understand</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="complaintModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:9999; justify-content:center; align-items:center;">
+    <div style="background:var(--card-bg, #fff); color:var(--text-dark, #111); width:90%; max-width:450px; padding:25px; border-radius:12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+        
+        <h2 style="margin-top:0; color:var(--primary, #9932CC);">Raise a Support Ticket</h2>
+        <p style="font-size:13px; color:#555; margin-bottom:15px;">Experiencing an issue? Let us know and we will resolve it ASAP.</p>
+        
+        <label style="font-weight:bold; font-size:14px;">Category</label>
+        <select id="ticketCategory" style="width:100%; margin-bottom:15px; padding:10px; border:1px solid #ccc; border-radius:6px; background:#fff; color:#000;">
+            <option value="">Select Category...</option>
+            <option value="Technical">Technical / Portal Issue</option>
+            <option value="Academic">Academic / Teacher Issue</option>
+            <option value="Accounts">Accounts / Fees Issue</option>
+            <option value="Infrastructure">Infrastructure / Branch Issue</option>
+            <option value="General">General / Management</option>
+        </select>
+
+        <label style="font-weight:bold; font-size:14px;">Subject</label>
+        <input type="text" id="ticketSubject" placeholder="E.g., PC #4 is broken" style="width:100%; margin-bottom:15px; padding:10px; border:1px solid #ccc; border-radius:6px; background:#fff; color:#000;">
+        
+        <label style="font-weight:bold; font-size:14px;">Description</label>
+        <textarea id="ticketDesc" placeholder="Describe the issue in detail (max 500 chars)" maxlength="500" rows="4" style="width:100%; margin-bottom:15px; padding:10px; border:1px solid #ccc; border-radius:6px; resize:none; background:#fff; color:#000;"></textarea>
+        
+        <label style="font-weight:bold; font-size:14px;">Attach Screenshot <span style="color:#888; font-size:12px; font-weight:normal;">(Optional - Max 2MB)</span></label>
+        <input type="file" id="ticketFileInput" accept="image/*,.pdf" style="width:100%; margin-bottom:15px; padding:8px; border:1px solid #ccc; border-radius:6px; background:#f8fafc; color:#000;">
+        
+        <div style="display:flex; gap:10px;">
+          <button id="submitTicketBtn" onclick="sendTicket()" style="background:var(--success, #16a34a); color:white; padding:12px; width:100%; border:none; border-radius:6px; font-weight:bold; cursor:pointer;">Submit Ticket</button>
+          <button onclick="document.getElementById('complaintModal').style.display='none'" style="background:#e5e7eb; color:#333; padding:12px; width:100%; border:none; border-radius:6px; font-weight:bold; cursor:pointer;">Cancel</button>
+        </div>
+    </div>
+  </div>
+
+<script src="config.js"></script>
+
+<script>
+  let currentStudentData = null; 
+
+  // --- MOBILE MENU FUNCTION ---
+  function toggleMobileMenu() {
+    document.getElementById("navActionsMenu").classList.toggle("active");
+  }
+
+  // --- TAB NAVIGATION ---
+  function switchTab(tabId) {
+    document.getElementById('mainDashboard').style.display = tabId === 'dashboard' ? 'block' : 'none';
+    document.getElementById('academicsDashboard').style.display = tabId === 'academics' ? 'block' : 'none';
+    
+    // Top Nav Sync
+    document.getElementById('tabDashboard').classList.toggle('active-tab', tabId === 'dashboard');
+    document.getElementById('tabAcademics').classList.toggle('active-tab', tabId === 'academics');
+    
+    // Scroll to top on switch
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // --- SWIPE GESTURES FOR MOBILE ---
+  let touchstartX = 0;
+  let touchendX = 0;
+  
+  const swipeContainer = document.getElementById('swipeContainer');
+  swipeContainer.addEventListener('touchstart', e => { touchstartX = e.changedTouches[0].screenX; });
+  swipeContainer.addEventListener('touchend', e => {
+    touchendX = e.changedTouches[0].screenX;
+    handleSwipe();
+  });
+
+  function handleSwipe() {
+    if (window.innerWidth > 768) return; // Only run on mobile
+    const threshold = 60; // Minimum swipe distance
+    if (touchendX < touchstartX - threshold) {
+      // Swiped Left (Go to Academics)
+      if (document.getElementById('mainDashboard').style.display !== 'none') {
+        switchTab('academics');
+      }
+    }
+    if (touchendX > touchstartX + threshold) {
+      // Swiped Right (Go back to Dashboard)
+      if (document.getElementById('academicsDashboard').style.display !== 'none') {
+        switchTab('dashboard');
+      }
+    }
+  }
+
+  function escapeHtml(text) {
+    if (!text) return "-";
+    return String(text)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+  }
+
+  function showLoader() { document.getElementById("loader").style.display = "flex"; }
+  function hideLoader() { document.getElementById("loader").style.display = "none"; }
+  function getUser() { const data = sessionStorage.getItem("portalUser"); return data ? JSON.parse(data) : null; }
+  function logout() { sessionStorage.removeItem("portalUser"); window.location.href = "index.html"; }
+
+  function closePopup() {
+    document.getElementById('qrOverlay').style.display = 'none';
+    document.querySelectorAll('.popup').forEach(p => p.style.display = 'none');
+  }
+
+  function openPaymentQrPopup(amount) {
+    document.getElementById('qrAmount').innerText = amount;
+    
+    const upiString = `upi://pay?pa=isha.6486-6@waicici&pn=CodeLine%20AI&am=${amount}&cu=INR`;
+    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(upiString)}`;
+    
+    document.getElementById('qrImage').src = qrUrl;
+
+    fetch(qrUrl)
+      .then(response => response.blob())
+      .then(blob => {
+        const blobUrl = URL.createObjectURL(blob);
+        document.getElementById('downloadQrBtn').href = blobUrl;
+      });
+
+    document.getElementById('qrOverlay').style.display = 'block';
+    document.getElementById('qrPopup').style.display = 'block';
+  }
+
+  function updateCertificateButtons() {
+      if (!currentStudentData) return;
+
+      const applyBtn = document.getElementById("btnApplyCert");
+      const viewBtn = document.getElementById("btnViewCert");
+
+      const balance = Number(currentStudentData.balanceFees || 0);
+      const status = String(currentStudentData.dynamicStatus || currentStudentData.verify || "").toUpperCase();
+      const certStatus = String(currentStudentData.certificateStatus || "NONE").toUpperCase();
+
+      const isFeesCleared = (balance <= 0 || status === "COMPLETED");
+
+      if (!isFeesCleared) {
+          applyBtn.disabled = true;
+          applyBtn.innerText = "🎓 Pay Dues to Unlock Certificate";
+          applyBtn.style.opacity = "0.5";
+          applyBtn.style.cursor = "not-allowed";
+          viewBtn.style.display = "none";
+          applyBtn.style.display = "inline-block";
+      } else {
+          if (certStatus === "PENDING") {
+              applyBtn.disabled = true;
+              applyBtn.innerText = "⏳ Application Under Review";
+              applyBtn.style.opacity = "0.7";
+              applyBtn.style.display = "inline-block";
+              viewBtn.style.display = "none";
+          } else if (certStatus === "APPROVED") {
+              applyBtn.style.display = "none";
+              viewBtn.style.display = "inline-block";
+          } else {
+              applyBtn.disabled = false;
+              applyBtn.innerText = "🎓 Apply for Certificate";
+              applyBtn.style.opacity = "1";
+              applyBtn.style.cursor = "pointer";
+              applyBtn.style.display = "inline-block";
+              viewBtn.style.display = "none";
+          }
+      }
+  }
+
+  function applyForCertificate() {
+    const user = getUser();
+    if (!user || !currentStudentData) return;
+    window.location.href = "apply_certificate.html";
+  }
+
+  function viewCertificate() {
+      if (currentStudentData && currentStudentData.certificateUrl) {
+          window.open(currentStudentData.certificateUrl, "_blank");
+      } else {
+          alert("Certificate link not found. Please contact administration.");
+      }
+  }
+
+  function parseStudentPortalDate(dateText) {
+    if (!dateText) return null;
+
+    const parsed = new Date(dateText);
+    if (!isNaN(parsed.getTime())) {
+      parsed.setHours(0, 0, 0, 0);
+      return parsed;
+    }
+
+    return null;
+  }
+
+  function shouldShowDueReminder(profile) {
+    if (!profile) return false;
+
+    const balance = Number(profile.balanceFees || 0);
+    const dueAmount = Number(profile.duePaymentNow || 0);
+    const dueDate = parseStudentPortalDate(profile.dueDate);
+    const verify = String(profile.verify || "").trim().toUpperCase();
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    if (balance <= 0) return false;
+    if (dueAmount <= 0) return false;
+    if (!dueDate) return false;
+    if (today < dueDate) return false;
+
+    if (verify === "PENDING" || verify === "PENDING_APPROVAL" || verify === "PENDING_EXTENSION") {
+      return false;
+    }
+    if (verify === "COMPLETED" || verify === "CANCELED" || verify === "CANCELLED") {
+      return false;
+    }
+    return true;
+  }
+
+  function showDueReminderPopup(profile) {
+    if (!shouldShowDueReminder(profile)) return;
+
+    document.getElementById("dueStudentName").innerText = profile.name || "-";
+    document.getElementById("dueCourseName").innerText = profile.course || "-";
+    document.getElementById("dueReminderDate").innerText = profile.dueDate || "-";
+    document.getElementById("dueReminderAmount").innerText = Number(profile.duePaymentNow || 0).toFixed(2);
+    document.getElementById("dueReminderLateDays").innerText = Number(profile.unpaidDays || 0);
+
+    document.getElementById("dueReminderOverlay").style.display = "flex";
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeDueReminder() {
+    document.getElementById("dueReminderOverlay").style.display = "none";
+    document.body.style.overflow = "";
+  }
+
+  function payFromDueReminder() {
+    closeDueReminder();
+
+    const amount = Number(currentStudentData?.duePaymentNow || 0);
+
+    if (typeof openPaymentQrPopup === "function" && amount > 0) {
+      openPaymentQrPopup(amount);
+    } else {
+      alert("Payment option is not available right now. Please contact the office.");
+    }
+  }
+
+  let isWifiPasswordVisible = false;
+
+  function getCurrentWifiPassword() {
+    return String((currentStudentData && currentStudentData.wifiPassword) || "").trim();
+  }
+
+  function toggleWifiPassword() {
+    isWifiPasswordVisible = !isWifiPasswordVisible;
+
+    const passEl = document.getElementById("studentWifiPassword");
+    const btnEl = document.getElementById("wifiToggleBtn");
+
+    if (!passEl || !btnEl) return;
+
+    const actualPassword = getCurrentWifiPassword();
+
+    passEl.innerText = isWifiPasswordVisible && actualPassword
+      ? actualPassword
+      : (actualPassword ? "••••••••••" : "-");
+
+    btnEl.innerText = isWifiPasswordVisible ? "Hide" : "Show";
+  }
+
+  function renderCourseNameBlock(courseName, courseLink) {
+    const name = String(courseName || "").trim() || "-";
+    const link = String(courseLink || "").trim();
+
+    if (!link) {
+      return `<span class="course-name-plain">${escapeHtml(name)}</span>`;
+    }
+
+    return `
+      <a href="${escapeHtml(link)}" target="_blank" rel="noopener noreferrer" class="course-name-link" title="Download course material">
+        ${escapeHtml(name)} <span aria-hidden="true">⬇</span>
+      </a>
+    `;
+  }
+
+  function parsePortalSessionDate(value) {
+    if (!value) return null;
+
+    if (value instanceof Date && !isNaN(value.getTime())) return value;
+
+    const text = String(value || "").trim();
+    if (!text) return null;
+
+    const direct = new Date(text);
+    if (!isNaN(direct.getTime())) return direct;
+
+    const match = text.match(/^(\d{1,2})\s+([A-Za-z]{3,})\s+(\d{4})\s+(\d{1,2}):(\d{2})(?::(\d{2}))?\s*(AM|PM)$/i);
+    if (!match) return null;
+
+    const months = {
+      jan: 0, january: 0, feb: 1, february: 1, mar: 2, march: 2, apr: 3, april: 3,
+      may: 4, jun: 5, june: 5, jul: 6, july: 6, aug: 7, august: 7, sep: 8, sept: 8, september: 8,
+      oct: 9, october: 9, nov: 10, november: 10, dec: 11, december: 11
+    };
+
+    const day = Number(match[1]);
+    const monthKey = match[2].toLowerCase();
+    const month = months[monthKey];
+    const year = Number(match[3]);
+    let hour = Number(match[4]);
+    const minute = Number(match[5]);
+    const second = Number(match[6] || 0);
+    const ampm = match[7].toUpperCase();
+
+    if (month === undefined) return null;
+    if (ampm === "PM" && hour < 12) hour += 12;
+    if (ampm === "AM" && hour === 12) hour = 0;
+
+    const parsed = new Date(year, month, day, hour, minute, second);
+    return isNaN(parsed.getTime()) ? null : parsed;
+  }
+
+  function getFilteredSessionText(user) {
+    const loginRaw = user && (user.loginAt || user.loginTime) ? (user.loginAt || user.loginTime) : "";
+    const loginDate = parsePortalSessionDate(loginRaw);
+
+    const sessionStart = new Date(2026, 4, 25, 18, 30, 0);
+
+    if (!loginDate || loginDate.getTime() < sessionStart.getTime()) {
+      return "-";
+    }
+
+    return (user && user.loginTime) ? user.loginTime : loginDate.toLocaleString();
+  }
+
+  function renderCourseDownloadCard(courseLink) {
+    const link = String(courseLink || "").trim();
+
+    if (!link) {
+      return `
+        <div class="info">
+          <b style="color:#e9d5ff;">Course Material:</b>
+          <span class="course-download-disabled">Not uploaded yet</span>
+        </div>
+      `;
+    }
+
+    return `
+      <div class="info">
+        <b style="color:#e9d5ff;">Course Material:</b>
+        <a href="${escapeHtml(link)}" target="_blank" rel="noopener noreferrer" class="course-download-btn">
+          ⬇️ Download Course
+        </a>
+      </div>
+    `;
+  }
+
+  // --- COMPLAINTS/HELPDESK FUNCTIONS ---
+  function readOptionalTicketFile(file) {
+      return new Promise((resolve) => {
+          if (!file) return resolve({ base64: "", name: "", mime: "" });
+          const reader = new FileReader();
+          reader.onload = () => resolve({ base64: reader.result, name: file.name, mime: file.type });
+          reader.onerror = () => resolve({ base64: "", name: "", mime: "" });
+          reader.readAsDataURL(file);
+      });
+  }
+
+  async function sendTicket() {
+      const userJson = sessionStorage.getItem("portalUser");
+      if (!userJson) { alert("Please login first."); return; }
+      const user = JSON.parse(userJson);
+
+      const category = document.getElementById("ticketCategory").value;
+      const subject = document.getElementById("ticketSubject").value.trim();
+      const desc = document.getElementById("ticketDesc").value.trim();
+      const fileInput = document.getElementById("ticketFileInput");
+
+      if(!category || !subject || !desc) {
+          alert("Please fill Category, Subject, and Description.");
+          return;
+      }
+
+      const optFile = fileInput.files[0];
+      if (optFile && optFile.size > 2 * 1024 * 1024) {
+          alert("Attached file is too large. Maximum size is 2 MB."); return;
+      }
+
+      const btn = document.getElementById("submitTicketBtn");
+      btn.innerText = "Submitting...";
+      btn.disabled = true;
+
+      const fileData = await readOptionalTicketFile(optFile);
+
+      const payload = new URLSearchParams({
+          action: "submitComplaint",
+          email: user.email,
+          name: user.name,
+          category: category,
+          subject: subject,
+          description: desc,
+          fileBase64: fileData.base64,
+          fileName: fileData.name,
+          fileMime: fileData.mime
+      });
+
+      try {
+          const res = await fetch(SCRIPT_URL, { method: "POST", body: payload });
+          const result = await res.json();
+          alert(result.message);
+          
+          if(result.success) {
+              document.getElementById('complaintModal').style.display = 'none';
+              document.getElementById("ticketCategory").value = "";
+              document.getElementById("ticketSubject").value = "";
+              document.getElementById("ticketDesc").value = "";
+              fileInput.value = ""; 
+          }
+      } catch(err) {
+          alert("Network error while submitting ticket.");
+      } finally {
+          btn.innerText = "Submit Ticket";
+          btn.disabled = false;
+      }
+  }
+
+  async function loadStudent() {
+      const user = getUser();
+      if (!user || user.role !== "student" || !user.token) { 
+        window.location.href = "index.html"; 
+        return; 
+      }
+
+      showLoader();
+      try {
+        const params = new URLSearchParams({ action: "getStudentDashboard", email: user.email, token: user.token });
+        const res = await fetch(`${SCRIPT_URL}?${params.toString()}`);
+        const result = await res.json();
+
+        if (!result.success) {
+          if (result.noAdmission) { alert(result.message); logout(); return; }
+          alert(result.message || "No student data found.");
+          if (String(result.message || "").toLowerCase().includes("session")) { logout(); }
+          return;
+        }
+
+        currentStudentData = result.profile || {};
+        const p = currentStudentData;
+        const defaultAvatar = "https://ui-avatars.com/api/?name=" + encodeURIComponent(p.name || "Student") + "&background=8A2BE2&color=fff&size=300";
+        const profilePhoto = p.profilePhotoUrl || defaultAvatar;
+
+        const currentVerify = String(p.verify).toUpperCase();
+        const unpaidDays = Number(p.unpaidDays || 0);
+        const balance = Number(p.balanceFees || 0);
+        
+        let statusBadge = "";
+
+        if (currentVerify === "CANCELED" || unpaidDays > 15) {
+           statusBadge = `<span style="display:inline-block; margin-left: 15px; color:#fff; font-size:12px; font-weight:bold; border: 1px solid #dc2626; padding: 4px 10px; border-radius: 6px; background: rgba(220, 38, 38, 0.8); vertical-align:middle; box-shadow: 0 0 8px rgba(220, 38, 38, 0.5);">🚫 Admission Cancelled</span>`;
+        } else if (balance > 0) {
+           if (unpaidDays <= 0) {
+              statusBadge = `<span style="display:inline-block; margin-left: 15px; color:#fff; font-size:12px; font-weight:bold; border: 1px solid var(--accent); padding: 4px 10px; border-radius: 6px; background: rgba(138, 43, 226, 0.85); vertical-align:middle; box-shadow: 0 0 8px rgba(138, 43, 226, 0.35);">✅ Normal Fees (No extra charge)</span>`;
+           } else if (unpaidDays > 0 && unpaidDays <= 5) {
+              statusBadge = `<span style="display:inline-block; margin-left: 15px; color:#fff; font-size:12px; font-weight:bold; border: 1px solid #f59e0b; padding: 4px 10px; border-radius: 6px; background: rgba(245, 158, 11, 0.8); vertical-align:middle; box-shadow: 0 0 8px rgba(245, 158, 11, 0.5);">⚠️ ₹50 Late Fee / Day</span>`;
+           } else if (unpaidDays > 5 && unpaidDays <= 10) {
+              statusBadge = `<span style="display:inline-block; margin-left: 15px; color:#fff; font-size:12px; font-weight:bold; border: 1px solid #f59e0b; padding: 4px 10px; border-radius: 6px; background: rgba(245, 158, 11, 0.8); vertical-align:middle; box-shadow: 0 0 8px rgba(245, 158, 11, 0.5);">⚠️ ₹100 Late Fee / Day</span>`;
+           } else if (unpaidDays > 10 && unpaidDays <= 15) {
+              statusBadge = `<span style="display:inline-block; margin-left: 15px; color:#fff; font-size:12px; font-weight:bold; border: 1px solid #dc2626; padding: 4px 10px; border-radius: 6px; background: rgba(220, 38, 38, 0.8); vertical-align:middle; box-shadow: 0 0 8px rgba(220, 38, 38, 0.5);">🛑 Classes Stopped</span>`;
+           }
+        } else {
+           statusBadge = `<span style="display:inline-block; margin-left: 15px; color:#fff; font-size:12px; font-weight:bold; border: 1px solid var(--accent); padding: 4px 10px; border-radius: 6px; background: rgba(138, 43, 226, 0.85); vertical-align:middle; box-shadow: 0 0 8px rgba(138, 43, 226, 0.35);">✅ Fees Clear</span>`;
+        }
+
+        document.getElementById("studentName").innerHTML = (p.name || "Student Dashboard") + statusBadge;
+
+        // --- NEW: INJECT DYNAMIC DATA INTO RESULTS DASHBOARD ---
+        // CONNECT THE GSHEET DEEP LINK TO THE BUTTON
+        const myGsheetDeepLink = "PASTE_YOUR_GOOGLE_SHEET_DEEP_LINK_HERE";
+        document.getElementById("detailedAnalysisBtn").href = `${myGsheetDeepLink}?email=${encodeURIComponent(p.email)}`;
+
+        updateCertificateButtons();
+
+        const marqueeContainer = document.getElementById("marqueeContainer");
+        if (marqueeContainer) {
+           if (result.announcements && result.announcements.length > 0) {
+              marqueeContainer.setAttribute("style", "display:block; background: rgba(75, 0, 130, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(138, 43, 226, 0.3); padding: 12px 15px; border-radius: 16px; margin-bottom: 20px; box-shadow: var(--shadow); overflow: hidden;");
+              const msgText = result.announcements.join(" &nbsp; &nbsp; 🟢 &nbsp; &nbsp; ");
+              marqueeContainer.innerHTML = `<marquee behavior="scroll" direction="left" scrollamount="6" style="color: #ffffff; font-weight: bold; font-size: 16px; letter-spacing: 0.5px;">${msgText}</marquee>`;
+           } else {
+              marqueeContainer.style.display = "none";
+              marqueeContainer.innerHTML = "";
+           }
+        }
+        
+        const currentUser = getUser();
+        const currentSessionText = getFilteredSessionText(currentUser);
+        const studentWifiName = String(p.wifiName || "").trim() || "-";
+        const studentWifiPassword = String(p.wifiPassword || "").trim();
+        const maskedWifiPassword = studentWifiPassword ? "••••••••••" : "-";
+        const wifiPasswordButtonHtml = studentWifiPassword
+          ? '<button type="button" id="wifiToggleBtn" class="wifi-toggle-btn" onclick="toggleWifiPassword()">Show</button>'
+          : '';
+
+        document.getElementById("studentProfile").innerHTML = `
+          <div class="profile-photo-card" style="grid-column: 1 / -1;">
+            <div class="profile-identity-wrap">
+              <div class="profile-photo-left">
+                <img
+                  src="${escapeHtml(profilePhoto)}"
+                  class="profile-photo-img"
+                  alt="Student Profile Photo"
+                  onerror="this.src='${escapeHtml(defaultAvatar)}'"
+                >
+                <button
+                  type="button"
+                  class="change-photo-btn"
+                  title="Change photo"
+                  aria-label="Change photo"
+                  onclick="document.getElementById('profilePhotoInput').click()"
+                >✏️</button>
+              </div>
+
+              <div class="profile-photo-actions">
+                <div style="font-size:20px; font-weight:800; color:#ffffff;">
+                  ${escapeHtml(p.name || "Student")}
+                </div>
+                <div style="font-size:13px; color:#e5e7eb;">
+                  ${escapeHtml(p.email || "")}
+                </div>
+                <small style="color:#cbd5e1;"><b style="color:#e9d5ff;">Session:</b> ${escapeHtml(currentSessionText)}</small>
+              </div>
+            </div>
+
+            <div class="profile-extra-grid">
+              <div class="info">
+                <b>Course:</b>
+                ${renderCourseNameBlock(p.course, p.courseLink)}
+              </div>
+              <div class="info">
+                <b style="color:#e9d5ff;">Admission Date:</b>
+                ${escapeHtml(p.admissionDate || "-")}
+              </div>
+              <div class="info">
+                <b style="color:#e9d5ff;">WiFi Name:</b>
+                ${escapeHtml(studentWifiName)}
+              </div>
+              <div class="info">
+                <b style="color:#e9d5ff;">WiFi Password:</b>
+                <div class="wifi-pass-wrap">
+                  <span id="studentWifiPassword" class="wifi-password-text">${escapeHtml(maskedWifiPassword)}</span>
+                  ${wifiPasswordButtonHtml}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="classroomCard" style="background: rgba(22, 163, 74, 0.15); border: 1px solid rgba(22, 163, 74, 0.4); padding: 15px; border-radius: 12px; margin-top: 15px; display: none; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; grid-column: 1 / -1;">
+            <div style="flex: 1; min-width: 200px;">
+              <b style="color: #e9d5ff; font-size: 12px; text-transform: uppercase;">Assigned Classrooms</b>
+              <select id="classroomDropdown" onchange="updateClassroomDetails()" style="display: block; width: 100%; max-width: 300px; margin-top: 8px; padding: 8px 12px; border-radius: 8px; background: rgba(0,0,0,0.4); color: #fff; border: 1px solid #16a34a; outline: none; font-weight: bold; cursor: pointer; font-size: 14px;">
+                <option value="">Loading classrooms...</option>
+              </select>
+            </div>
+            
+            <div style="text-align: right; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+              <span id="classCodeContainer" style="background: #111; color: #16a34a; padding: 8px 12px; border-radius: 6px; font-family: monospace; font-weight: bold; letter-spacing: 1px;">
+                Code: <span id="classCodeSpan" style="user-select: all; font-size: 16px;">-</span>
+              </span>
+              <a id="classJoinBtn" href="https://classroom.google.com" target="_blank" style="background: #16a34a; color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 13px; transition: 0.3s; display: inline-block;">Join Class</a>
+            </div>
+          </div>
+
+          <div class="fees-summary-grid">
+            <div class="info"><b style="color:#e9d5ff;">Total Fees:</b> ₹${Number(p.totalFees || 0)}</div>
+            <div class="info"><b style="color:#e9d5ff;">Due Date:</b> ${escapeHtml(p.dueDate || "-")}</div>
+            <div class="info"><b style="color:#e9d5ff;">Paid Amount:</b> ₹${Number(p.totalPaidFees || 0)}</div>
+            <div class="info"><b style="color:#e9d5ff;">Balance Amount:</b> ₹${Number(p.balanceFees || 0)}</div>
+            <div class="info"><b style="color:#e9d5ff;">Total Late Fees:</b> ₹${Number(p.totalLateFees || 0)}</div>
+          </div>
+        `;
+
+        const classCard = document.getElementById("classroomCard");
+        const classDropdown = document.getElementById("classroomDropdown");
+
+        if (p.classrooms && Array.isArray(p.classrooms) && p.classrooms.length > 0) {
+            classDropdown.innerHTML = "";
+            p.classrooms.forEach((cls, index) => {
+                let opt = document.createElement("option");
+                opt.value = index;
+                opt.text = cls.name || cls.course || `Classroom ${index + 1}`;
+                classDropdown.appendChild(opt);
+            });
+            window.availableClassrooms = p.classrooms;
+            updateClassroomDetails();
+            classCard.style.display = "flex";
+        } else if (p.classroomCode && p.classroomCode.trim() !== "") {
+            classDropdown.innerHTML = `<option value="0">${p.classroomName || p.course}</option>`;
+            classDropdown.disabled = true;
+            document.getElementById("classCodeSpan").innerText = p.classroomCode;
+            classCard.style.display = "flex";
+        } else {
+            classCard.style.display = "none";
+        }
+
+        const histBody = document.getElementById("historyBody");
+        histBody.innerHTML = "";
+
+        if (!result.history || !result.history.length) {
+          histBody.innerHTML = `<tr><td colspan="9" style="text-align:center;font-weight:bold;padding:20px;color:#111;">No history found</td></tr>`;
+        } else {
+          result.history.forEach((row, i) => {
+            const isLate = String(row.statusText || "").toLowerCase().includes("late");
+            const safeReceipt = String(row.receiptNo || "").startsWith("-") ? "-" : escapeHtml(row.receiptNo || "-");
+            
+            // Apply new soft badges
+            let badgeClass = "status-success";
+            let statusTxt = row.statusText || "Paid";
+            if (statusTxt.toLowerCase().includes("pending")) badgeClass = "status-warning";
+            if (statusTxt.toLowerCase().includes("late")) badgeClass = "status-danger";
+            
+            let pdfBtn = row.download ? `<a href="${row.download}" target="_blank" class="download-btn">View PDF</a>` : `-`;
+            
+            histBody.innerHTML += `
+              <tr class="clickable-row" style="transition: background 0.2s ease;" onmouseover="this.style.background='#f3f4f6'; this.style.color='#111';" onmouseout="this.style.background='transparent'; this.style.color='inherit';">
+                <td>${i+1}</td>
+                <td><strong>${row.installmentType || "-"}</strong></td>
+                <td style="color:var(--success); font-weight:bold;">₹${Number(row.amount || 0)}</td>
+                <td>${row.paymentDate || "-"}</td>
+                <td><span class="status-badge ${badgeClass}">${statusTxt}</span></td>
+                <td>${row.paymentMode || "-"}</td>
+                <td class="${Number(row.lateFee || 0) > 0 ? "late" : ""}">₹${Number(row.lateFee || 0)}</td>
+                <td>${safeReceipt}</td>
+                <td>${pdfBtn}</td>
+              </tr>
+            `;
+          });
+        }
+
+        if (Number(p.balanceFees) > 0 && currentVerify !== 'CANCELED') {
+          const totalDue = Number(p.duePaymentNow) > 0 ? Number(p.duePaymentNow) : Number(p.monthlyInstallment);
+          const lateFee = Number(p.liveLateFee) || 0;
+          const cycleDue = totalDue - lateFee;
+          const emi = Number(p.monthlyInstallment) || 0;
+          
+          if (cycleDue > 0 && cycleDue < emi) {
+              const thisMonthTotal = cycleDue + lateFee;
+              let amountDisplay = `₹${thisMonthTotal}`;
+              if (lateFee > 0) amountDisplay += ` <br><span style="font-size:12px; color:#888; font-weight:normal;">(₹${cycleDue} + ₹${lateFee} Late)</span>`;
+
+              histBody.innerHTML += `
+                <tr style="background: rgba(138, 43, 226, 0.08); border-top: 2px solid var(--accent);">
+                  <td>-</td>
+                  <td><strong style="color: var(--primary);">This Month Remaining</strong></td>
+                  <td style="color:var(--warning); font-weight:bold; font-size: 15px; line-height: 1.4;">${amountDisplay}</td>
+                  <td>-</td>
+                  <td><span class="status-badge status-warning">Pending Pay</span></td>
+                  <td>-</td>
+                  <td>-</td>
+                  <td>-</td>
+                  <td><button class="pay-btn-inline" onclick="openPaymentQrPopup(${thisMonthTotal})">Pay Now</button></td>
+                </tr>
+              `;
+
+              const futureBalance = Number(p.balanceFees) - cycleDue;
+              if (futureBalance > 0) {
+                 const nextEmi = Math.min(emi, futureBalance); 
+                 const combinedNextMonth = cycleDue + nextEmi; 
+                 
+                 histBody.innerHTML += `
+                    <tr style="background: rgba(243, 244, 246, 0.4); opacity: 0.9;">
+                      <td>-</td>
+                      <td><strong style="color: #6b7280;">Next Installment</strong></td>
+                      <td style="color:#6b7280; font-weight:bold; font-size: 14px; line-height: 1.4;">
+                         ₹${combinedNextMonth} <br><span style="font-size:12px; color:#888; font-weight:normal;">(₹${cycleDue} + ₹${nextEmi})</span>
+                      </td>
+                      <td>-</td>
+                      <td><span class="status-badge" style="background:#e5e7eb; color:#4b5563;">Upcoming</span></td>
+                      <td>-</td>
+                      <td>-</td>
+                      <td>-</td>
+                      <td>-</td>
+                    </tr>
+                  `;
+              }
+           } else {
+              let amountDisplay = `₹${totalDue}`;
+              if (lateFee > 0) amountDisplay += ` <br><span style="font-size:12px; color:#888; font-weight:normal;">(₹${cycleDue} + ₹${lateFee} Late)</span>`;
+
+              histBody.innerHTML += `
+                <tr style="background: rgba(138, 43, 226, 0.08); border-top: 2px solid var(--accent);">
+                  <td>-</td>
+                  <td><strong style="color: var(--primary);">Next Installment</strong></td>
+                  <td style="color:var(--warning); font-weight:bold; font-size: 15px; line-height: 1.4;">${amountDisplay}</td>
+                  <td>-</td>
+                  <td><span class="status-badge status-warning">Pending Pay</span></td>
+                  <td>-</td>
+                  <td>-</td>
+                  <td>-</td>
+                  <td><button class="pay-btn-inline" onclick="openPaymentQrPopup(${totalDue})">Pay Now</button></td>
+                </tr>
+              `;
+          }
+        }
+
+        // SYNC ATTENDANCE TABLE & DYNAMICALLY UPDATE DONUT GRAPH
+        const attendanceBodyQuick = document.getElementById("attendanceTableBodyQuick");
+        
+        if (attendanceBodyQuick) {
+            attendanceBodyQuick.innerHTML = "";
+            
+            function getDisplayDate(d) {
+                const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                return `${months[d.getMonth()]} ${String(d.getDate()).padStart(2, '0')} ${d.getFullYear()}`;
+            }
+            function getLocalYYYYMMDD(d) {
+                return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+            }
+
+            const existingRecords = new Map();
+            if (result.attendance) {
+                result.attendance.forEach(record => {
+                    const d = new Date(record.date);
+                    if (!isNaN(d.getTime())) existingRecords.set(getLocalYYYYMMDD(d), record);
+                });
+            }
+
+            let completeAttendance = [];
+            if (p.admissionDate) {
+                const start = new Date(p.admissionDate);
+                const end = new Date(); 
+                start.setHours(0, 0, 0, 0); end.setHours(0, 0, 0, 0);
+
+                for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+                    if (d.getDay() === 0) continue; 
+                    const dateKey = getLocalYYYYMMDD(d);
+                    if (existingRecords.has(dateKey)) {
+                        completeAttendance.push(existingRecords.get(dateKey));
+                    } else {
+                        completeAttendance.push({ date: getDisplayDate(d), status: "Absent", checkIn: "-", checkOut: "-", topic: "-" });
+                    }
+                }
+            } else {
+                completeAttendance = result.attendance || [];
+            }
+
+            completeAttendance.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            if (completeAttendance.length === 0) {
+                const emptyRow = `<tr><td colspan="3" style="text-align:center; padding:15px; color:#888;">No attendance records found yet.</td></tr>`;
+                attendanceBodyQuick.innerHTML = emptyRow;
+            } else {
+                let presentCount = 0; let absentCount = 0;
+                completeAttendance.forEach((record, index) => {
+                    const statusUpper = String(record.status).toUpperCase();
+                    if (statusUpper.includes("PRESENT")) presentCount++;
+                    else if (statusUpper.includes("ABSENT")) absentCount++;
+                    else if (statusUpper.includes("LATE") || statusUpper.includes("LEAVE")) presentCount++;
+
+                    let badge = statusUpper.includes("ABSENT") ? "color:#dc2626; font-weight:bold;" : "color:#16a34a; font-weight:bold;";
+                    
+                    // Only display top 5 rows on the summary dashboard quick table
+                    if (index < 5) {
+                        attendanceBodyQuick.innerHTML += `
+                            <tr style="border-bottom: 1px solid #e5e7eb;">
+                                <td style="text-align:left;">${record.date || "-"}</td>
+                                <td style="${badge}">${record.status || "-"}</td>
+                                <td>${record.topic || "-"}</td>
+                            </tr>
+                        `;
+                    }
+                });
+
+                // UPDATE QUICK SUMMARY TEXT
+                const summaryEl = document.getElementById("attendanceSummary");
+                if (summaryEl) {
+                    summaryEl.innerHTML = `<span style="color: #16a34a;">Present: ${presentCount}</span> &nbsp;|&nbsp; <span style="color: #dc2626;">Absent: ${absentCount}</span>`;
+                }
+
+                // DYNAMICALLY UPDATE THE DONUT CHART IN THE ACADEMICS TAB
+                const totalClasses = presentCount + absentCount;
+                let presentPercent = 0;
+                if (totalClasses > 0) {
+                    presentPercent = Math.round((presentCount / totalClasses) * 100);
+                }
+                
+                const donutEl = document.getElementById("attendanceDonutChart");
+                if (donutEl) {
+                    donutEl.style.background = `conic-gradient(#10b981 0% ${presentPercent}%, #ef4444 ${presentPercent}% 100%)`;
+                }
+                const pctText = document.getElementById("attPercentText");
+                if (pctText) pctText.innerText = `${presentPercent}%`;
+                
+                const pCountEl = document.getElementById("attPresentCount");
+                if (pCountEl) pCountEl.innerText = presentCount;
+                
+                const aCountEl = document.getElementById("attAbsentCount");
+                if (aCountEl) aCountEl.innerText = absentCount;
+            }
+        }
+
+        setTimeout(() => showDueReminderPopup(p), 300);
+
+      } catch (err) {
+        console.error(err);
+        alert("Failed to load student dashboard.");
+      } finally {
+        hideLoader();
+      }
+  }
+
+  function fileToBase64Student(file) {
+    return new Promise((resolve, reject) => {
+      if (!file) {
+        resolve("");
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = () => reject(new Error("Failed to read profile photo."));
+      reader.readAsDataURL(file);
+    });
+  }
+
+  async function uploadStudentProfilePhoto(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    if (file.size > 2 * 1024 * 1024) {
+      alert("Photo size must be less than 2 MB.");
+      event.target.value = "";
+      return;
+    }
+
+    const user = getUser();
+
+    if (!user || user.role !== "student" || !user.token) {
+      alert("Session expired.");
+      logout();
+      return;
+    }
+
+    showLoader();
+
+    try {
+      const base64 = await fileToBase64Student(file);
+
+      const payload = new URLSearchParams({
+        action: "updateStudentProfilePhoto",
+        email: user.email,
+        token: user.token,
+        studentPhotoBase64: base64,
+        studentPhotoName: file.name,
+        studentPhotoType: file.type
+      });
+
+      const res = await fetch(SCRIPT_URL, {
+        method: "POST",
+        body: payload
+      });
+
+      const result = await res.json();
+
+      alert(result.message || "Done");
+
+      if (result.success) {
+        await loadStudent();
+      }
+
+    } catch (err) {
+      console.error(err);
+      alert("Failed to upload profile photo.");
+    } finally {
+      hideLoader();
+      event.target.value = "";
+    }
+  }
+
+  function updateClassroomDetails() {
+      const dropdown = document.getElementById("classroomDropdown");
+      const selectedIndex = dropdown.value;
+      
+      if (window.availableClassrooms && window.availableClassrooms[selectedIndex]) {
+          const cls = window.availableClassrooms[selectedIndex];
+          
+          document.getElementById("classCodeSpan").innerText = cls.code || "No Code Available";
+          
+          const joinBtn = document.getElementById("classJoinBtn");
+          if (cls.link && cls.link.trim() !== "") {
+              joinBtn.href = cls.link;
+              joinBtn.style.display = "inline-block";
+          } else {
+              joinBtn.href = "https://classroom.google.com";
+          }
+      }
+  }
+
+  loadStudent();
+</script>
+</body>
+</html>

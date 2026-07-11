@@ -1,0 +1,160 @@
+/* Reset and Base */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background: #f4f4f9;
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+h2 {
+  text-align: center;
+  font-size: 22px;
+  color: #333;
+  margin-top: 16px;
+  margin-bottom: 10px;
+}
+
+/* Center Wrapper */
+.form-zoom-wrap {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 15px;
+  box-sizing: border-box;
+}
+
+/* Card Style */
+.zoom-card {
+  width: 100%;
+  max-width: 480px;
+  background: #fff;
+  border-radius: 10px;
+  padding: 18px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  border: 1px solid rgba(0,0,0,0.08);
+  box-sizing: border-box;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  transform-origin: top center;
+}
+
+/* Inputs and Labels */
+.zoom-card input,
+.zoom-card select,
+.zoom-card button,
+.zoom-card label {
+  width: 100%;
+  margin: 8px 0;
+  padding: 12px;
+  font-size: 15px;
+  border-radius: 6px;
+  box-sizing: border-box;
+}
+
+.zoom-card input,
+.zoom-card select {
+  border: 1px solid #ccc;
+  background: #fafafa;
+}
+
+/* Disabled Inputs */
+.zoom-card input[disabled] {
+  background: #f1f1f1;
+  color: #555;
+}
+
+/* Focus Style */
+.zoom-card input:focus,
+.zoom-card select:focus {
+  outline: none;
+  border-color: #4CAF50;
+  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
+}
+
+/* Button */
+.zoom-card button {
+  background: #0b8a13;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 15px;
+  cursor: pointer;
+  margin-top: 12px;
+}
+.zoom-card button:hover {
+  background: #097d11;
+}
+
+/* Message */
+#message {
+  text-align: center;
+  margin-top: 15px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #2b7a2b;
+  display: none; /* hidden until shown */
+}
+
+/* #message::before {
+  content: "✅";
+} */
+
+/* ZOOM EFFECT */
+@media (max-width: 540px) {
+  .zoom-card {
+    transform: scale(1.05);
+  }
+  .zoom-card:focus-within {
+    transform: scale(1.09);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+  }
+}
+
+@media (min-width: 541px) {
+  .zoom-card:hover {
+    transform: scale(1.03);
+    box-shadow: 0 10px 26px rgba(0,0,0,0.1);
+  }
+  .zoom-card:focus-within {
+    transform: scale(1.04);
+    box-shadow: 0 12px 36px rgba(0,0,0,0.12);
+  }
+}
+/* === FULL-SCREEN SPINNER OVERLAY === */
+.spinner-overlay {
+  position: fixed;             /* cover entire viewport */
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(255,255,255,0.85);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;     /* vertical center */
+  align-items: center;         /* horizontal center */
+  z-index: 9999;
+}
+
+.spinner {
+  border: 6px solid #f3f3f3;
+  border-top: 6px solid #4CAF50;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 12px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.spinner-overlay p {
+  color: #333;
+  font-size: 18px;
+  font-weight: bold;
+}

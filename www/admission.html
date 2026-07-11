@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CodeLine AI - Admission Form</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+:root {
+  /* Brand Accents */
+  --primary-dark: #4B0082; /* Dark Purple for Titles & Buttons */
+  --accent-color: #4B0082;
+  
+  /* Card Theme */
+  --card-bg: #ffffff;
+  --text-on-card: #000000;
+  --text-muted-card: #555555;
+  --border-color: #000000;
+
+  --shadow-md: 0 12px 30px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.6);
+}
+
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+  /* 1. Unbreakable safety net for the whole page */
+  background-color: #1a0033; 
+}
+
+/* BACKGROUND ANIMATION - ULTIMATE iOS FIX */
+body {
+  /* 2. Solid color fallback if the animation is killed by Low Power Mode */
+  background-color: #1a0033; 
+  
+  /* 3. Use background-IMAGE instead of background for the gradients */
+  background-image: -webkit-linear-gradient(-45deg, #1a0033, #5500cc, #9d00ff, #ff00aa);
+  background-image: linear-gradient(-45deg, #1a0033, #5500cc, #9d00ff, #ff00aa);
+  
+  background-size: 400% 400%;
+  background-attachment: fixed; /* Fixes iOS scrolling issues */
+  
+  -webkit-animation: gradientShift 12s ease infinite;
+  animation: gradientShift 12s ease infinite; 
+  
+  color: #ffffff; /* Default text color for items directly on background */
+  
+  /* 4. Fixes the famous iOS viewport height bug */
+  min-height: 100vh;
+  
+  padding: 24px 12px;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Target iOS specifically for the height fix */
+@supports (-webkit-touch-callout: none) {
+  body {
+    min-height: -webkit-fill-available;
+  }
+}
+
+@-webkit-keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* FLOATING CODE FRAGMENTS - FALLING DOWNWARDS */
+.animated-background {
+  position: fixed; 
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  
+  /* 1. Bring the symbols IN FRONT of the body background */
+  z-index: 0; 
+  
+  /* 2. Prevent the symbols from blocking taps/clicks on phones */
+  pointer-events: none; 
+}
+
+.animated-background li {
+  position: absolute;
+  display: block;
+  list-style: none;
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: 900; 
+  
+  /* NEON CYAN COLOR */
+  color: #00ffff; 
+  text-shadow: 0 0 8px #00ffff, 0 0 20px #00ffff;
+  
+  /* FALL DOWNWARD ANIMATION */
+  animation: floatDown 25s linear infinite;
+  top: -150px; 
+  
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Make every second floating item Neon Pink */
+.animated-background li:nth-child(even) {
+  color: #ff4fd8; 
+  text-shadow: 0 0 8px #ff4fd8, 0 0 20px #ff4fd8;
+}
+
+.animated-background li:nth-child(1) { left: 25%; font-size: 60px; animation-delay: 0s; }
+.animated-background li:nth-child(2) { left: 10%; font-size: 30px; animation-delay: 2s; animation-duration: 12s; }
+.animated-background li:nth-child(3) { left: 70%; font-size: 40px; animation-delay: 4s; }
+.animated-background li:nth-child(4) { left: 40%; font-size: 80px; animation-delay: 0s; animation-duration: 18s; }
+.animated-background li:nth-child(5) { left: 65%; font-size: 25px; animation-delay: 0s; }
+.animated-background li:nth-child(6) { left: 85%; font-size: 90px; animation-delay: 3s; }
+.animated-background li:nth-child(7) { left: 55%; font-size: 50px; animation-delay: 7s; }
+.animated-background li:nth-child(8) { left: 20%; font-size: 35px; animation-delay: 15s; animation-duration: 35s; }
+.animated-background li:nth-child(9) { left: 5%; font-size: 70px; animation-delay: 8s; animation-duration: 22s; }
+.animated-background li:nth-child(10) { left: 90%; font-size: 45px; animation-delay: 12s; animation-duration: 28s; }
+
+@keyframes floatDown {
+  0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(1200px) rotate(360deg); opacity: 0; }
+}
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  
+  /* 3. Lift the entire form safely ABOVE the falling symbols */
+  position: relative;
+  z-index: 10;
+}
+
+/* WHITE CARDS & BLACK TEXT */
+.hero-note{
+  background: var(--card-bg);
+  color: var(--text-on-card);
+  border:1px solid var(--border-color);
+  border-radius:24px;
+  padding:22px;
+  text-align:center;
+  margin-bottom:20px;
+  box-shadow:var(--shadow-md);
+}
+
+.hero-note h2{
+  color: var(--primary-dark);
+  margin-bottom:6px;
+}
+
+.header-banner{
+  background: var(--card-bg);
+  border-radius:28px;
+  overflow:hidden;
+  margin-bottom:24px;
+  border:1px solid var(--border-color);
+  box-shadow:var(--shadow-md);
+}
+
+.header-banner h1 {
+  margin: 0;
+  min-height: 90px; /* REDUCED from 160px */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px; /* REDUCED from 56px */
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: var(--primary-dark); 
+}
+
+.card{
+  background: var(--card-bg);
+  border-radius:28px;
+  padding:32px;
+  margin-bottom:22px;
+  border:1px solid var(--border-color);
+  box-shadow:var(--shadow-md);
+  color: var(--text-on-card); /* Ensure all standard text in card is black */
+}
+
+.card h2{
+  color: var(--primary-dark);
+  margin-bottom:22px;
+  font-size:24px;
+  font-weight:700;
+  border:none;
+}
+
+/* PROGRESS BAR STYLING FOR DARK BACKGROUND */
+.step-count{
+  text-align:center;
+  margin-bottom:15px;
+  font-weight:700;
+  color: #ffffff;
+  -webkit-user-select: none; 
+  user-select: none; 
+}
+
+.wizard-progress{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+  margin-bottom:25px;
+}
+
+.wizard-step{
+  text-align:center;
+  padding:14px;
+  border-radius:999px;
+  background: rgba(255, 255, 255, 0.2); 
+  color: #ffffff;
+  font-weight:700;
+  border:1px solid rgba(255, 255, 255, 0.5);
+  transition: 0.3s;
+  -webkit-user-select: none; 
+  user-select: none;
+}
+
+.wizard-step.active{
+  background: #ffffff;
+  color: var(--primary-dark);
+  border:none;
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+}
+
+.wizard-step.completed{
+  background: rgba(255, 255, 255, 0.6);
+  color: #000000;
+  border:1px solid #ffffff;
+}
+
+.form-page{
+  display:none;
+}
+
+.form-page.active{
+  display:block;
+}
+
+.form-group{
+  margin-bottom:22px;
+}
+
+.form-group label{
+  display:block;
+  margin-bottom:8px;
+  font-size:14px;
+  font-weight:600;
+  color: var(--text-on-card); /* Black text */
+}
+
+.required{
+  color: #d32f2f; /* Red for required stars to stand out on white */
+}
+
+/* INPUT STYLES (White BG, Black Text, Black Borders) */
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="date"],
+input[type="number"],
+select{
+  width:100%;
+  padding:15px 16px;
+  border:1px solid var(--border-color);
+  border-radius:16px;
+  background: #ffffff; 
+  color: #000000;
+  font-size:15px;
+  transition:.25s;
+}
+
+input:focus,
+select:focus{
+  outline:none;
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 3px rgba(75, 0, 130, 0.2);
+}
+
+input::placeholder {
+  color: #888888;
+}
+
+select option {
+  background: #ffffff;
+  color: #000000;
+}
+
+input[type="file"]{
+  width:100%;
+  border:2px dashed var(--border-color);
+  border-radius:18px;
+  padding:22px;
+  background: #fafafa;
+  cursor:pointer;
+  color: #000000;
+}
+
+.radio-group{
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+}
+
+.radio-label{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  background: #ffffff;
+  border:1px solid var(--border-color);
+  color: #000000;
+  padding:12px 18px;
+  border-radius:14px;
+  cursor:pointer;
+  transition:.25s;
+}
+
+.radio-label:hover{
+  border-color: var(--accent-color);
+  background: #f4f4f4;
+}
+
+small{
+  margin-top:6px;
+  display:block;
+  color: var(--text-muted-card);
+}
+
+.terms-box{
+  background: #f9f9f9;
+  border:1px solid var(--border-color);
+  border-radius:18px;
+  padding:18px;
+  height:180px;
+  overflow-y:auto;
+  margin-bottom:18px;
+  color: var(--text-on-card);
+}
+
+.terms-box li{
+  margin-bottom:10px;
+}
+
+.wizard-nav{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  margin-top:20px;
+  margin-bottom:30px;
+}
+
+.wizard-nav button{
+  cursor:pointer;
+  border:none;
+  border-radius:16px;
+  padding:16px 24px;
+  font-size:16px;
+  font-weight:700;
+  transition:.25s;
+}
+
+.back-btn{
+  background: #eeeeee;
+  color: #000000;
+  border:1px solid var(--border-color) !important;
+}
+
+.back-btn:hover{
+  background: #dddddd;
+}
+
+.next-btn,
+.submit-btn,
+.new-admission-btn{
+  background: var(--primary-dark);
+  color: white;
+  border: 1px solid #000000;
+}
+
+.next-btn:hover,
+.submit-btn:hover,
+.new-admission-btn:hover{
+  transform:translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+.submit-btn{
+  width:100%;
+  padding:16px;
+  font-size:18px;
+}
+
+.submit-btn:disabled{
+  opacity:.7;
+  cursor:not-allowed;
+}
+
+.thank-you-page{
+  display:none;
+  max-width:850px;
+  margin:30px auto;
+  background: var(--card-bg);
+  border-radius:30px;
+  padding:60px 30px;
+  text-align:center;
+  border:1px solid var(--border-color);
+  box-shadow:var(--shadow-lg);
+  color: var(--text-on-card);
+}
+
+.thank-you-page h1{
+  color: var(--primary-dark);
+  font-size:42px;
+  margin-bottom:12px;
+}
+
+.thank-you-page p{
+  font-size:18px;
+  color: var(--text-on-card);
+  margin-bottom:8px;
+}
+
+.new-admission-btn{
+  border:none;
+  border-radius:16px;
+  padding:16px 28px;
+  margin-top:25px;
+  font-size:16px;
+  font-weight:700;
+}
+
+/* LOADER STYLES */
+#loader{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0, 0, 0, 0.85); /* Dark blur for loader */
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index:9999;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+}
+
+.logo-box{
+  width:150px; height:150px; background: #ffffff;
+  border:2px solid var(--primary-dark); border-radius:24px; display:flex; align-items:center; justify-content:center; position:relative;
+  box-shadow: 0 0 30px rgba(255, 255, 255, 0.2); animation:logoPulse 2s ease-in-out infinite;
+  margin-bottom: 20px;
+}
+@keyframes logoPulse{
+  0%, 100%{ transform:scale(1); }
+  50%{ transform:scale(1.05); }
+}
+svg.logo-svg{ width:120px; height:120px; animation:logoFloat 2s ease-in-out infinite; }
+svg.logo-svg path, svg.logo-svg polygon{ stroke:var(--primary-dark); stroke-width:3; fill:none; stroke-linecap:round; stroke-linejoin:round; }
+svg.logo-svg path:nth-child(1){ animation:drawPath 2s ease-in-out infinite; }
+svg.logo-svg path:nth-child(2){ animation:drawPath 2s ease-in-out infinite 0.3s; }
+svg.logo-svg path:nth-child(3){ animation:drawPath 2s ease-in-out infinite 0.6s; }
+@keyframes drawPath{ 0%, 100%{ stroke-dasharray:100; stroke-dashoffset:0; opacity:1; } 50%{ stroke-dasharray:100; stroke-dashoffset:10; opacity:0.8; } }
+.logo-box::after{ content:''; position:absolute; inset:-8px; border:2px solid transparent; border-top-color:var(--primary-dark); border-right-color:var(--primary-dark); border-radius:24px; animation:logoRingSpin 2s linear infinite reverse; }
+@keyframes logoRingSpin{ 100%{transform:rotate(-360deg)} }
+
+::-webkit-scrollbar{
+  width:8px;
+}
+
+::-webkit-scrollbar-thumb{
+  background: var(--primary-dark);
+  border-radius:999px;
+}
+.input-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  width: 100%;
+}
+
+@media(max-width:768px){
+  /* Update the mobile header size */
+  .header-banner h1{
+    font-size: 28px;
+    padding: 15px 16px;
+    min-height: 70px;
+  }
+  
+  /* Force inputs to stack perfectly on iPhones so they never break out */
+  .input-row {
+    grid-template-columns: 1fr; 
+  }
+  
+  .card{
+    padding:22px;
+  }
+  .wizard-progress{
+    grid-template-columns:1fr 1fr;
+  }
+  .wizard-nav{
+    flex-direction:column;
+  }
+  .wizard-nav button,
+  .submit-btn{
+    width:100%;
+  }
+  .next-btn{
+    margin-left:0;
+  }
+  .radio-group{
+    flex-direction:column;
+  }
+  .thank-you-page{
+    padding:35px 20px;
+  }
+  .thank-you-page h1{
+    font-size:32px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+  <ul class="animated-background">
+    <li>&lt;/&gt;</li>
+    <li>{ }</li>
+    <li>★</li>
+    <li>[ ]</li>
+    <li>0101</li>
+    <li>*</li>
+    <li>( )</li>
+    <li>+</li>
+    <li>🤣</li>
+    <li>&lt;code&gt;</li>
+    <li>★</li>
+  </ul>
+
+  <div id="loader">
+    <div class="logo-box">
+      <svg class="logo-svg" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+        <path d="M 25 30 Q 15 45, 15 60 Q 15 75, 25 90" />
+        <path d="M 60 20 L 75 30 L 75 50 L 60 60 L 45 50 L 45 30 Z" />
+        <path d="M 95 30 L 85 30 Q 75 30, 75 60 Q 75 90, 85 90 L 95 90" />
+      </svg>
+    </div>
+    <h3 style="color: #ffffff; letter-spacing: 1px;" id="loaderText">Submitting Application...</h3>
+    <p style="color: rgba(255,255,255,0.8); margin-top: 5px;">Please wait.</p>
+  </div>
+
+  <div class="container">
+    <div class="header-banner">
+      <h1>CODELINE AI</h1>
+      <div style="background: var(--primary-dark); padding: 10px; color: white; font-weight: bold; font-size: 14px; text-align:center; border-top: 1px solid #000;">
+        Looking for Industrial Training? Call us 7744822228 or visit CodeLine AI
+      </div>
+    </div>
+
+    <form id="admissionForm" onsubmit="submitForm(event)" novalidate>
+
+      <div class="step-count" id="stepCount">Step 1 of 4</div>
+
+      <div class="wizard-progress">
+        <div class="wizard-step active" data-step="0">Personal</div>
+        <div class="wizard-step" data-step="1">Course</div>
+        <div class="wizard-step" data-step="2">Payment</div>
+        <div class="wizard-step" data-step="3">Submit</div>
+      </div>
+
+      <div class="form-page active" data-page="0">
+      <div class="card">
+        <h2>1. Personal Details</h2>
+
+        <div class="form-group">
+          <label>Email Address <span class="required">*</span></label>
+          <input type="email" id="email" required>
+        </div>
+
+        <div class="form-group">
+          <label>Full Name (As Per Mark-sheet) <span class="required">*</span></label>
+          <input type="text" id="fullName" style="text-transform: uppercase;" required>
+        </div>
+
+        <div class="input-row">
+          <div class="form-group">
+            <label>Date Of Birth <span class="required">*</span></label>
+            <input type="date" id="dob" required>
+          </div>
+
+          <div class="form-group">
+            <label>Mobile (WhatsApp) <span class="required">*</span></label>
+            <input type="tel" id="mobile" pattern="[0-9]{10}" maxlength="10" placeholder="Student 10 Digit Number" required>
+          </div>
+
+          <div class="form-group">
+            <label>Parent Mobile Number <span class="required">*</span></label>
+            <input type="tel" id="parentMobile" pattern="[0-9]{10}" maxlength="10" placeholder="Parent 10 Digit Number" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Gender <span class="required">*</span></label>
+          <div class="radio-group">
+            <label class="radio-label">
+              <input type="radio" name="gender" value="Male" required> Male
+            </label>
+            <label class="radio-label">
+              <input type="radio" name="gender" value="Female"> Female
+            </label>
+            <label class="radio-label">
+              <input type="radio" name="gender" value="Other"> Other
+            </label>
+          </div>
+        </div>
+      </div>
+      </div>
+
+      <div class="form-page" data-page="1">
+      <div class="card">
+        <h2>2. Academic & Course Details</h2>
+
+        <div class="form-group">
+          <label>Qualification <span class="required">*</span></label>
+          <input type="text" id="qualification" placeholder="e.g., B.Tech, BCA, MCA" required>
+        </div>
+
+        <div class="form-group">
+          <label>College / Company Name <span class="required">*</span></label>
+          <input type="text" id="college" required>
+        </div>
+
+        <div class="form-group">
+          <label>Select CodeLine Branch <span class="required">*</span></label>
+          <select id="branch" required>
+            <option value="">Loading branches...</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Course Type <span class="required">*</span></label>
+          <div class="radio-group" onchange="toggleTshirt()">
+            <label class="radio-label">
+              <input type="radio" name="courseType" value="Industrial" required> Industrial
+            </label>
+            <label class="radio-label">
+              <input type="radio" name="courseType" value="Certificate"> Certificate
+            </label>
+            <label class="radio-label">
+              <input type="radio" name="courseType" value="Internship"> Internship
+            </label>
+          </div>
+        </div>
+
+        <div
+          class="form-group"
+          id="tshirtBox"
+          style="display: none; background: #f9f9f9; padding: 15px; border-radius: 8px; border: 1px solid #000000;"
+        >
+          <label style="color: #000000;">T-shirt Size (Only for Industrial Course) <span class="required">*</span></label>
+          <select id="tshirt">
+            <option value="">-- Select Size --</option>
+            <option value="XS">XS</option>
+            <option value="S">S</option>
+            <option value="M">M</option>
+            <option value="L">L</option>
+            <option value="XL">XL</option>
+            <option value="XXL">XXL</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Select Course <span class="required">*</span></label>
+          <select id="course" required>
+            <option value="">Loading courses...</option>
+          </select>
+        </div>
+      </div>
+      </div>
+
+      <div class="form-page" data-page="2">
+      <div class="card">
+        <h2>3. Payment Details & Document Verification</h2>
+
+        <div style="background: #f9f9f9; padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid var(--border-color); font-size: 14px; color: #000000;">
+          <strong>UPI ID:</strong> cakant70@oksbi | <strong>PhonePe / GPay:</strong> 8087737673
+        </div>
+
+        <div class="form-group">
+          <label>Mode Of Initial Payment <span class="required">*</span></label>
+          <div class="radio-group">
+            <label class="radio-label">
+              <input type="radio" name="payMode" value="Cash" required onchange="togglePaymentModeFields()"> Cash
+            </label>
+            <label class="radio-label">
+              <input type="radio" name="payMode" value="UPI" onchange="togglePaymentModeFields()"> UPI / Online
+            </label>
+            <label class="radio-label">
+              <input type="radio" name="payMode" value="Cash + UPI" onchange="togglePaymentModeFields()"> Cash + UPI
+            </label>
+            <label class="radio-label">
+              <input type="radio" name="payMode" value="Other" onchange="togglePaymentModeFields()"> Other
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Initial Amount Paid (₹) <span class="required">*</span></label>
+          <input type="number" id="admissionAmount" placeholder="e.g. 5000" min="0" required oninput="syncCashUpiSplitTotal()">
+        </div>
+
+        <div id="cashUpiSplitBox" style="display:none; background:#f9f9f9; border:1px solid var(--border-color); border-radius:8px; padding:15px; margin-bottom:20px;">
+          <div style="display:flex; gap:15px; flex-wrap:wrap;">
+            <div class="form-group" style="flex:1; min-width:200px; margin-bottom:0;">
+              <label>Cash Amount (₹) <span class="required">*</span></label>
+              <input type="number" id="cashAmount" placeholder="e.g. 3000" min="0" oninput="syncCashUpiSplitTotal()">
+            </div>
+            <div class="form-group" style="flex:1; min-width:200px; margin-bottom:0;">
+              <label>UPI Amount (₹) <span class="required">*</span></label>
+              <input type="number" id="upiAmount" placeholder="e.g. 2000" min="0" oninput="syncCashUpiSplitTotal()">
+            </div>
+          </div>
+          <small id="splitAmountHelp" style="font-weight:700; color:#000000; margin-top:10px;">Cash + UPI must equal Initial Amount Paid.</small>
+        </div>
+
+        <div class="form-group" id="upiScreenshotBox" style="display:none;">
+          <label>Upload UPI Payment Screenshot <span class="required">*</span></label>
+          <input type="file" id="upiScreenshot" accept="image/*">
+          <small>Required when payment mode is UPI / Online or Cash + UPI. JPG/PNG allowed. Max size: 2 MB.</small>
+        </div>
+
+        <div class="form-group">
+          <label>Upload Student Photo <span class="required">*</span></label>
+          <input type="file" id="studentPhoto" accept="image/*" required>
+          <small>Upload clear student/profile photo. JPG/PNG allowed. Max size: 2 MB.</small>
+        </div>
+
+        <div class="form-group">
+          <label>Upload Aadhar Photo <span class="required">*</span></label>
+          <input type="file" id="aadharPhoto" accept="image/*" required>
+          <small>Upload clear Aadhar photo. JPG/PNG allowed. Max size: 2 MB.</small>
+        </div>
+
+        <div class="form-group">
+          <label>Upload Marksheet Photo <span class="required">*</span></label>
+          <input type="file" id="marksheetPhoto" accept="image/*" required>
+          <small>Upload clear last marksheet photo. JPG/PNG allowed. Max size: 2 MB.</small>
+        </div>
+
+        <div style="background: #f9f9f9; padding: 15px; border-radius: 8px; border: 1px solid #000000; font-size: 14px; color: #000000; font-weight: bold;">
+          ⚠️ Please upload clear Student, Aadhar, and Marksheet photos. These images will be saved separately in database columns.
+        </div>
+      </div>
+      </div>
+
+      <div class="form-page" data-page="3">
+      <div class="card">
+        <h2>4. Terms & Regulations</h2>
+
+        <div class="terms-box">
+          <ol style="margin:0; padding-left: 20px;">
+            <li>Registration amount or installment amount paid is <b style="color: #d32f2f;">non-refundable</b> under any circumstances.</li>
+            <li>Installment fees must be paid <b>on or before the due date</b>.</li>
+            <li>If an installment is paid after the due date, a <b style="color: #d32f2f;">₹100 penalty per day</b> will be charged. After 15 days the admission will be cancelled.</li>
+            <li>The institute reserves the right to change/modify course duration, batch schedule, or content.</li>
+            <li>Course downgrade or course change is not allowed.</li>
+            <li>The institute provides <b>placement assistance only</b>. It does not guarantee job placement.</li>
+          </ol>
+        </div>
+
+        <label style="display: flex; align-items: center; gap: 10px; font-weight: bold; cursor: pointer; color: #000000;">
+          <input type="checkbox" id="termsCheck" style="width: 20px; height: 20px; cursor: pointer;" required>
+          I have read and accept the institute rules, fees policy, and placement assistance terms.
+        </label>
+      </div>
+      </div>
+
+      <div class="wizard-nav">
+        <button type="button" class="back-btn" id="prevBtn" onclick="prevPage()">Back</button>
+        <button type="button" class="next-btn" id="nextBtn" onclick="nextPage()">Next</button>
+        <button type="submit" class="submit-btn" id="submitBtn">Submit Admission Application</button>
+      </div>
+    </form>
+  </div>
+
+
+  <div id="thankYouPage" class="thank-you-page">
+    <h1>🎉 Thank You!</h1>
+    <p>Your admission form has been submitted successfully.</p>
+    <p>Please visit the branch for document verification and fee confirmation.</p>
+    <button class="new-admission-btn" onclick="location.reload()">Add New Admission</button>
+  </div>
+
+  <script src="config.js"></script>
+
+  <script>
+    let currentPage = 0;
+
+    document.addEventListener("DOMContentLoaded", function() {
+      showPage(0);
+      loadPublicData();
+      togglePaymentModeFields();
+    });
+
+    async function loadPublicData() {
+      try {
+        const res = await fetch(SCRIPT_URL + "?action=getPublicData");
+        const result = await res.json();
+
+        if (result.success) {
+          const courseSelect = document.getElementById("course");
+          courseSelect.innerHTML = '<option value="">-- Choose Course --</option>';
+
+          result.courses.forEach(c => {
+            courseSelect.innerHTML += `<option value="${c.name}">${c.name}</option>`;
+          });
+
+          const branchSelect = document.getElementById("branch");
+          const branches = Array.isArray(result.branches) ? result.branches : [];
+          branchSelect.innerHTML = '<option value="">-- Choose Branch --</option>';
+
+          if (!branches.length) {
+            branchSelect.innerHTML = '<option value="">No branches found in Branches sheet</option>';
+          } else {
+            branches.forEach(b => {
+              branchSelect.innerHTML += `<option value="${b}">${b}</option>`;
+            });
+          }
+        } else {
+          console.error("Failed to load backend data.");
+        }
+      } catch (err) {
+        console.error("Error fetching dynamic data:", err);
+        document.getElementById("course").innerHTML = '<option value="">Error loading courses</option>';
+        document.getElementById("branch").innerHTML = '<option value="">Error loading branches</option>';
+      }
+    }
+
+    function showPage(pageIndex) {
+      const pages = document.querySelectorAll(".form-page");
+      const steps = document.querySelectorAll(".wizard-step");
+
+      if (pageIndex < 0 || pageIndex >= pages.length) return;
+
+      currentPage = pageIndex;
+
+      pages.forEach((page, index) => {
+        page.classList.toggle("active", index === currentPage);
+      });
+
+      steps.forEach((step, index) => {
+        step.classList.toggle("active", index === currentPage);
+        step.classList.toggle("completed", index < currentPage);
+      });
+
+      document.getElementById("stepCount").innerText = `Step ${currentPage + 1} of ${pages.length}`;
+
+      document.getElementById("prevBtn").style.display = currentPage === 0 ? "none" : "inline-block";
+      document.getElementById("nextBtn").style.display = currentPage === pages.length - 1 ? "none" : "inline-block";
+      document.getElementById("submitBtn").style.display = currentPage === pages.length - 1 ? "block" : "none";
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function validatePage(pageIndex) {
+      const page = document.querySelector(`.form-page[data-page="${pageIndex}"]`);
+      if (!page) return true;
+
+      const fields = page.querySelectorAll("input, select, textarea");
+
+      for (const field of fields) {
+        if (field.disabled) continue;
+
+        if (!field.checkValidity()) {
+          showPage(pageIndex);
+
+          setTimeout(() => {
+            field.focus();
+            field.reportValidity();
+          }, 100);
+
+          return false;
+        }
+      }
+
+      return true;
+    }
+
+    function validateAllPages() {
+      const pages = document.querySelectorAll(".form-page");
+
+      for (let i = 0; i < pages.length; i++) {
+        if (!validatePage(i)) return false;
+      }
+
+      return true;
+    }
+
+    function nextPage() {
+      if (!validatePage(currentPage)) return;
+      showPage(currentPage + 1);
+    }
+
+    function prevPage() {
+      showPage(currentPage - 1);
+    }
+
+    function toggleTshirt() {
+      const checkedType = document.querySelector('input[name="courseType"]:checked');
+      if (!checkedType) return;
+
+      const type = checkedType.value;
+      const box = document.getElementById("tshirtBox");
+      const input = document.getElementById("tshirt");
+
+      if (type === "Industrial") {
+        box.style.display = "block";
+        input.required = true;
+      } else {
+        box.style.display = "none";
+        input.required = false;
+        input.value = "";
+      }
+    }
+
+    function fileToBase64(file) {
+      return new Promise((resolve, reject) => {
+        if (!file) {
+          resolve("");
+          return;
+        }
+
+        const reader = new FileReader();
+
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = () => reject(new Error("Failed to read file."));
+
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function stopLoaderAndEnableButton() {
+      document.getElementById("loader").style.display = "none";
+      document.getElementById("submitBtn").disabled = false;
+    }
+
+    function getSelectedPaymentMode() {
+      const checked = document.querySelector('input[name="payMode"]:checked');
+      return checked ? checked.value : "";
+    }
+
+    function togglePaymentModeFields() {
+      const mode = getSelectedPaymentMode();
+      const splitBox = document.getElementById("cashUpiSplitBox");
+      const screenshotBox = document.getElementById("upiScreenshotBox");
+      const cashInput = document.getElementById("cashAmount");
+      const upiInput = document.getElementById("upiAmount");
+      const screenshotInput = document.getElementById("upiScreenshot");
+
+      const needsSplit = mode === "Cash + UPI";
+      const needsScreenshot = mode === "UPI" || mode === "Cash + UPI";
+
+      if (splitBox) splitBox.style.display = needsSplit ? "block" : "none";
+      if (screenshotBox) screenshotBox.style.display = needsScreenshot ? "block" : "none";
+
+      if (cashInput) {
+        cashInput.required = needsSplit;
+        if (!needsSplit) cashInput.value = "";
+      }
+
+      if (upiInput) {
+        upiInput.required = needsSplit;
+        if (!needsSplit) upiInput.value = "";
+      }
+
+      if (screenshotInput) {
+        screenshotInput.required = needsScreenshot;
+        if (!needsScreenshot) screenshotInput.value = "";
+      }
+
+      syncCashUpiSplitTotal();
+    }
+
+    function syncCashUpiSplitTotal() {
+      const mode = getSelectedPaymentMode();
+      const help = document.getElementById("splitAmountHelp");
+      if (!help || mode !== "Cash + UPI") return;
+
+      const total = Number(document.getElementById("admissionAmount").value || 0);
+      const cash = Number(document.getElementById("cashAmount").value || 0);
+      const upi = Number(document.getElementById("upiAmount").value || 0);
+      const sum = cash + upi;
+
+      help.innerText = `Cash ₹${cash} + UPI ₹${upi} = ₹${sum}. Initial Amount Paid = ₹${total}.`;
+      help.style.color = total > 0 && Math.abs(sum - total) < 0.01 ? "#000000" : "#d32f2f";
+    }
+
+    async function submitForm(e) {
+      e.preventDefault();
+
+      if (!validateAllPages()) return;
+
+      document.getElementById("loaderText").innerText = "Submitting Application...";
+      document.getElementById("loader").style.display = "flex";
+      document.getElementById("submitBtn").disabled = true;
+
+      try {
+        const parentMobile = document.getElementById("parentMobile").value.trim();
+
+        const studentPhotoInput = document.getElementById("studentPhoto");
+        const aadharInput = document.getElementById("aadharPhoto");
+        const marksheetInput = document.getElementById("marksheetPhoto");
+        const upiScreenshotInput = document.getElementById("upiScreenshot");
+
+        const studentPhotoFile = studentPhotoInput.files[0];
+        const aadharFile = aadharInput.files[0];
+        const marksheetFile = marksheetInput.files[0];
+        const upiScreenshotFile = upiScreenshotInput ? upiScreenshotInput.files[0] : null;
+
+        const selectedPayMode = getSelectedPaymentMode();
+        const paidAmount = Number(document.getElementById("admissionAmount").value || 0);
+        const cashAmount = Number(document.getElementById("cashAmount").value || 0);
+        const upiAmount = Number(document.getElementById("upiAmount").value || 0);
+
+        if (!parentMobile) {
+          alert("Please enter parent mobile number.");
+          stopLoaderAndEnableButton();
+          return;
+        }
+
+        if (!/^[0-9]{10}$/.test(parentMobile)) {
+          alert("Parent mobile number must be 10 digits.");
+          stopLoaderAndEnableButton();
+          return;
+        }
+
+        if (!studentPhotoFile) {
+          alert("Please upload student photo.");
+          stopLoaderAndEnableButton();
+          return;
+        }
+
+        if (!aadharFile) {
+          alert("Please upload Aadhar photo.");
+          stopLoaderAndEnableButton();
+          return;
+        }
+
+        if (!marksheetFile) {
+          alert("Please upload Marksheet photo.");
+          stopLoaderAndEnableButton();
+          return;
+        }
+
+        if (!selectedPayMode) {
+          alert("Please select mode of initial payment.");
+          stopLoaderAndEnableButton();
+          return;
+        }
+
+        if ((selectedPayMode === "UPI" || selectedPayMode === "Cash + UPI") && !upiScreenshotFile) {
+          alert("Please upload UPI payment screenshot.");
+          stopLoaderAndEnableButton();
+          return;
+        }
+
+        if (selectedPayMode === "Cash + UPI") {
+          if (cashAmount <= 0 || upiAmount <= 0) {
+            alert("Please enter both Cash Amount and UPI Amount.");
+            stopLoaderAndEnableButton();
+            return;
+          }
+
+          if (Math.abs((cashAmount + upiAmount) - paidAmount) > 0.01) {
+            alert("Cash Amount + UPI Amount must equal Initial Amount Paid.");
+            stopLoaderAndEnableButton();
+            return;
+          }
+        }
+
+        if (studentPhotoFile.size > 2 * 1024 * 1024) {
+          alert("Student photo size must be less than 2 MB.");
+          stopLoaderAndEnableButton();
+          return;
+        }
+
+        if (aadharFile.size > 2 * 1024 * 1024) {
+          alert("Aadhar photo size must be less than 2 MB.");
+          stopLoaderAndEnableButton();
+          return;
+        }
+
+        if (marksheetFile.size > 2 * 1024 * 1024) {
+          alert("Marksheet photo size must be less than 2 MB.");
+          stopLoaderAndEnableButton();
+          return;
+        }
+
+        if (upiScreenshotFile && upiScreenshotFile.size > 2 * 1024 * 1024) {
+          alert("UPI payment screenshot size must be less than 2 MB.");
+          stopLoaderAndEnableButton();
+          return;
+        }
+
+        const studentPhotoBase64 = await fileToBase64(studentPhotoFile);
+        const aadharPhotoBase64 = await fileToBase64(aadharFile);
+        const marksheetPhotoBase64 = await fileToBase64(marksheetFile);
+        const upiScreenshotBase64 = await fileToBase64(upiScreenshotFile);
+
+        const extraData =
+          `[ONLINE APP] DOB: ${document.getElementById("dob").value}` +
+          ` | Gender: ${document.querySelector('input[name="gender"]:checked').value}` +
+          ` | Qual: ${document.getElementById("qualification").value}` +
+          ` | College: ${document.getElementById("college").value}` +
+          ` | Type: ${document.querySelector('input[name="courseType"]:checked').value}` +
+          ` | T-Shirt: ${document.getElementById("tshirt").value || "N/A"}`;
+
+        let finalPaymentMode = selectedPayMode;
+        if (selectedPayMode === "UPI") {
+          finalPaymentMode = "UPI / Online";
+        } else if (selectedPayMode === "Cash + UPI") {
+          finalPaymentMode = `Cash: ₹${cashAmount} + UPI: ₹${upiAmount}`;
+        }
+
+        const payload = {
+          action: "publicAdmission",
+
+          email: document.getElementById("email").value.trim(),
+          fullName: document.getElementById("fullName").value.trim().toUpperCase(),
+          mobile: document.getElementById("mobile").value.trim(),
+          parentMobile: parentMobile,
+          branch: document.getElementById("branch").value.trim(),
+          course: document.getElementById("course").value.trim(),
+
+          paymentMode: finalPaymentMode,
+          rawPaymentMode: selectedPayMode,
+          cashAmount: selectedPayMode === "Cash + UPI" ? cashAmount : (selectedPayMode === "Cash" ? paidAmount : 0),
+          upiAmount: selectedPayMode === "Cash + UPI" ? upiAmount : (selectedPayMode === "UPI" ? paidAmount : 0),
+
+          studentPhotoBase64: studentPhotoBase64,
+          studentPhotoName: studentPhotoFile.name,
+          studentPhotoType: studentPhotoFile.type,
+
+          aadharPhotoBase64: aadharPhotoBase64,
+          aadharPhotoName: aadharFile.name,
+          aadharPhotoType: aadharFile.type,
+
+          marksheetPhotoBase64: marksheetPhotoBase64,
+          marksheetPhotoName: marksheetFile.name,
+          marksheetPhotoType: marksheetFile.type,
+
+          upiScreenshotBase64: upiScreenshotBase64,
+          upiScreenshotName: upiScreenshotFile ? upiScreenshotFile.name : "",
+          upiScreenshotType: upiScreenshotFile ? upiScreenshotFile.type : "",
+
+          formNo: "",
+          admissionAmount: paidAmount,
+
+          totalFees: 0,
+          monthlyInstallment: 0,
+          remainingAfterAdmission: 0,
+
+          admissionDate: new Date().toISOString().split("T")[0],
+          dueDate: "",
+          batch: "TBD",
+          duration: "TBD",
+
+          receivedBy: "Online Portal",
+          remarks: extraData,
+          teacherEmail: "online@admission.portal"
+        };
+
+        // NEW JSON FETCH FIX to prevent mobile network dropouts on 8MB+ forms
+        const res = await fetch(SCRIPT_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "text/plain;charset=utf-8", 
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const result = await res.json();
+
+        document.getElementById("loader").style.display = "none";
+
+        if (result.success) {
+          document.getElementById("admissionForm").style.display="none"; 
+          document.getElementById("thankYouPage").style.display="block"; 
+          window.scrollTo(0,0);
+        } else {
+          alert("Error: " + result.message);
+          document.getElementById("submitBtn").disabled = false;
+        }
+
+      } catch (err) {
+        console.error(err);
+        document.getElementById("loader").style.display = "none";
+        document.getElementById("submitBtn").disabled = false;
+        alert("A network error occurred. Please try again.");
+      }
+    }
+  </script>
+</body>
+</html>

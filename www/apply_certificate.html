@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apply for Course Completion Certificate - CodeLine AI</title>
+  <style>
+    :root {
+      --bg-color: #dfd3db; 
+      --card-bg: #ffffff;
+      --primary-purple: #673ab7; 
+      --text-main: #202124;
+      --text-sub: #5f6368;
+      --danger: #d93025;
+      --border-color: #dadce0;
+      --focus-color: #673ab7;
+      --btn-text: #ffffff;
+      --link-color: #1a73e8;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: 'Google Sans', Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      color: var(--text-main);
+    }
+
+    .form-container {
+      width: 100%;
+      max-width: 640px;
+      margin: 20px auto;
+      padding: 0 10px;
+    }
+
+    /* HEADER BANNER */
+    .header-banner {
+      background: linear-gradient(135deg, #1f041a, #3a0a2a);
+      color: #fff;
+      border-radius: 8px;
+      margin-bottom: 12px;
+      height: 140px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .header-banner::before {
+      content: "🎓";
+      position: absolute;
+      left: 20px;
+      bottom: 10px;
+      font-size: 80px;
+      opacity: 0.2;
+    }
+    
+    .header-banner::after {
+      content: "✨";
+      position: absolute;
+      right: 20px;
+      top: 10px;
+      font-size: 60px;
+      opacity: 0.2;
+    }
+
+    .header-banner h1 {
+      font-family: 'Brush Script MT', cursive, serif;
+      font-size: 42px;
+      margin: 0;
+      color: #ffd700;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    }
+
+    .header-banner p {
+      margin: 5px 0 0 0;
+      font-size: 14px;
+      letter-spacing: 0.5px;
+    }
+
+    /* FORM CARDS */
+    .card {
+      background-color: var(--card-bg);
+      border-radius: 8px;
+      padding: 24px;
+      margin-bottom: 12px;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    }
+
+    .top-card {
+      border-top: 10px solid var(--primary-purple);
+    }
+
+    .top-card h1 {
+      font-size: 32px;
+      font-weight: 400;
+      margin: 0 0 12px 0;
+      line-height: 1.2;
+    }
+
+    .top-card p {
+      font-size: 14px;
+      color: var(--text-main);
+      margin: 0 0 10px 0;
+      line-height: 1.5;
+    }
+
+    .top-card hr {
+      border: none;
+      border-top: 1px solid var(--border-color);
+      margin: 20px 0;
+    }
+
+    .required-text {
+      color: var(--danger);
+      font-size: 13px;
+      margin-top: 15px !important;
+    }
+
+    /* QUESTION STYLES */
+    .question-title {
+      font-size: 16px;
+      font-weight: 500;
+      margin-bottom: 16px;
+      color: var(--text-main);
+    }
+
+    .req-star {
+      color: var(--danger);
+    }
+
+    /* INPUT STYLES */
+    input[type="text"], 
+    input[type="url"],
+    input[type="date"] {
+      width: 50%;
+      border: none;
+      border-bottom: 1px solid var(--border-color);
+      padding: 8px 0;
+      font-size: 14px;
+      outline: none;
+      background: transparent;
+      color: var(--text-main);
+      transition: border-bottom 0.3s;
+    }
+
+    @media (max-width: 600px) {
+      input[type="text"], input[type="url"], input[type="date"] { width: 100%; }
+    }
+
+    input[type="text"]:focus, 
+    input[type="url"]:focus,
+    input[type="date"]:focus {
+      border-bottom: 2px solid var(--focus-color);
+    }
+
+    /* RADIO BUTTONS */
+    .radio-group {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .radio-option {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      font-size: 14px;
+      color: var(--text-main);
+    }
+
+    .radio-option input[type="radio"] {
+      width: 20px;
+      height: 20px;
+      margin: 0;
+      accent-color: var(--primary-purple);
+      cursor: pointer;
+    }
+
+    /* SELECT DROPDOWN */
+    select {
+      width: 200px;
+      padding: 10px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      font-size: 14px;
+      outline: none;
+      color: var(--text-main);
+      cursor: pointer;
+      background: #fff;
+    }
+
+    select:focus {
+      border: 2px solid var(--focus-color);
+      padding: 9px;
+    }
+
+    /* FILE UPLOAD BUTTON */
+    .upload-desc {
+      font-size: 12px;
+      color: var(--text-sub);
+      margin-top: -10px;
+      margin-bottom: 15px;
+    }
+
+    .upload-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--border-color);
+      color: var(--link-color);
+      background: #fff;
+      padding: 8px 24px;
+      border-radius: 4px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .upload-btn:hover {
+      background: #f8f9fa;
+    }
+
+    .upload-btn svg {
+      width: 18px;
+      height: 18px;
+      fill: currentColor;
+    }
+
+    .hidden-file {
+      display: none;
+    }
+
+    /* FOOTER BUTTONS */
+    .form-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0 30px 0;
+    }
+
+    .submit-btn {
+      background-color: var(--primary-purple);
+      color: var(--btn-text);
+      border: none;
+      padding: 10px 24px;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .submit-btn:hover:not(:disabled) {
+      background-color: #532c91;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+    
+    .submit-btn:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+    .clear-btn {
+      background: transparent;
+      border: none;
+      color: var(--primary-purple);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      padding: 10px 15px;
+      border-radius: 4px;
+    }
+    
+    .clear-btn:hover {
+      background: rgba(103, 58, 183, 0.05);
+    }
+    
+    .footer-disclaimer {
+      font-size: 12px;
+      color: var(--text-sub);
+      text-align: center;
+      margin-bottom: 30px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="form-container">
+    
+    <div class="header-banner">
+      <h1>Congratulations!</h1>
+      <p>For Successful completion of Course with<br><strong>CodeLine AI Institute</strong></p>
+    </div>
+
+    <form id="certificateForm" onsubmit="submitForm(event)">
+      
+      <div class="card top-card">
+        <h1>Apply for Course Completion Certificate</h1>
+        <p><b>CodeLine AI Institute</b><br><i>ISO 9001 : 2015 Certificate</i></p>
+        <p><br>(Avoid Spelling Mistakes)<br>The deadline for certificate applications is just 1 week.</p>
+        <hr>
+        <p class="required-text">* Indicates required question</p>
+      </div>
+
+      <div class="card">
+        <div class="question-title">FULL NAME (As Per Mark-sheet) <span class="req-star">*</span></div>
+        <input type="text" id="fullName" placeholder="Your answer" required>
+      </div>
+
+      <div class="card">
+        <div class="question-title">Mobile (WhatsApp) <span class="req-star">*</span></div>
+        <input type="text" id="mobile" placeholder="Your answer" required>
+      </div>
+
+      <div class="card">
+        <div class="question-title">Gender <span class="req-star">*</span></div>
+        <div class="radio-group">
+          <label class="radio-option">
+            <input type="radio" name="gender" value="Female" required>
+            Female
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="gender" value="Male" required>
+            Male
+          </label>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="question-title">Qualification <span class="req-star">*</span></div>
+        <input type="text" id="qualification" placeholder="Your answer" required>
+      </div>
+
+      <div class="card">
+        <div class="question-title">Course Completed <span class="req-star">*</span></div>
+        <select id="course" required>
+          <option value="" disabled selected>Choose</option>
+          <option value="C">C</option>
+          <option value="C++">C++</option>
+          <option value="Java">Java</option>
+          <option value="Python">Python</option>
+          <option value="Web Development">Web Development</option>
+          <option value="Data Analysis">Data Analysis</option>
+          <option value="Data Science">Data Science</option>
+          <option value="Full Stack">Full Stack</option>
+          <option value="AI/ML">AI/ML</option>
+          <option value="Other">Other (Specify below)</option>
+        </select>
+      </div>
+
+      <div class="card">
+        <div class="question-title">Course Name : (If 'Other' selected above)</div>
+        <input type="text" id="otherCourse" placeholder="Your answer">
+      </div>
+
+      <div class="card">
+        <div class="question-title">Branch <span class="req-star">*</span></div>
+        <div class="radio-group">
+          <label class="radio-option"><input type="radio" name="branch" value="Bhande Plot" required> Bhande Plot</label>
+          <label class="radio-option"><input type="radio" name="branch" value="Tiranga Chowk" required> Tiranga Chowk</label>
+          <label class="radio-option"><input type="radio" name="branch" value="Friends Colony" required> Friends Colony</label>
+          <label class="radio-option"><input type="radio" name="branch" value="Bansi Nagar, Hingna" required> Bansi Nagar, Hingna</label>
+          <label class="radio-option"><input type="radio" name="branch" value="Ramdev Baba" required> Ramdev Baba</label>
+          <label class="radio-option"><input type="radio" name="branch" value="Wadi" required> Wadi</label>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="question-title">Admission Date <span class="req-star">*</span></div>
+        <input type="date" id="admissionDate" required>
+      </div>
+
+      <div class="card">
+        <div class="question-title">End Date <span class="req-star">*</span></div>
+        <input type="date" id="endDate" required>
+      </div>
+
+      <div class="card">
+        <div class="question-title">Last Pass-out Mark-sheet <span class="req-star">*</span></div>
+        <div class="upload-desc">Upload 1 supported file: PDF, document, or image. Max 2 MB.</div>
+        
+        <input type="file" id="marksheet" class="hidden-file" accept="image/*,.pdf,.doc,.docx" required>
+        <button type="button" class="upload-btn" onclick="document.getElementById('marksheet').click()">
+          <svg viewBox="0 0 24 24"><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg>
+          <span id="marksheetLabel">Add file</span>
+        </button>
+      </div>
+
+      <div class="card">
+        <div class="question-title">Passport size photo <span class="req-star">*</span></div>
+        <div class="upload-desc">Upload 1 supported file: image. Max 2 MB.</div>
+        
+        <input type="file" id="photo" class="hidden-file" accept="image/*" required>
+        <button type="button" class="upload-btn" onclick="document.getElementById('photo').click()">
+          <svg viewBox="0 0 24 24"><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg>
+          <span id="photoLabel">Add file</span>
+        </button>
+      </div>
+
+      <div class="card">
+        <div class="question-title">Review Video Link <span class="req-star">*</span></div>
+        <div class="upload-desc" style="font-size:14px; color:var(--text-main); margin-bottom: 20px;">
+          Please upload your recorded video on your Google Drive and share the <b>public link</b>.
+        </div>
+        <input type="url" id="videoLink" placeholder="Your answer" required>
+      </div>
+
+      <div class="form-footer">
+        <button type="submit" class="submit-btn" id="submitBtn">Submit Application</button>
+        <button type="button" class="clear-btn" onclick="window.location.href='student.html'">Cancel</button>
+      </div>
+
+      <div class="footer-disclaimer">
+        Never submit passwords through forms.<br><br>
+        CodeLine AI Institute - Certificate Portal
+      </div>
+
+    </form>
+  </div>
+
+  <script src="config.js"></script>
+
+  <script>
+    // --- FILE UPLOAD UI LOGIC ---
+    function setupFileInput(inputId, labelId) {
+      const input = document.getElementById(inputId);
+      const label = document.getElementById(labelId);
+      const btn = input.nextElementSibling;
+      
+      input.addEventListener('change', function() {
+        if (this.files && this.files.length > 0) {
+          const file = this.files[0];
+          
+          // Check file size (Max 2MB = 2 * 1024 * 1024 bytes)
+          if (file.size > 2097152) {
+              alert("File is too large! Maximum size is 2 MB.");
+              this.value = ""; // Clear the file
+              label.innerText = "Add file";
+              btn.style.color = "var(--link-color)";
+              btn.style.borderColor = "var(--border-color)";
+              return;
+          }
+
+          label.innerText = file.name;
+          btn.style.color = "#16a34a";
+          btn.style.borderColor = "#16a34a";
+        } else {
+          label.innerText = "Add file";
+          btn.style.color = "var(--link-color)";
+          btn.style.borderColor = "var(--border-color)";
+        }
+      });
+    }
+
+    setupFileInput('marksheet', 'marksheetLabel');
+    setupFileInput('photo', 'photoLabel');
+
+    // --- BASE64 CONVERTER ---
+    async function getBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => {
+          // split off the "data:image/png;base64," part
+          const base64Data = reader.result.split(',')[1];
+          resolve({
+            data: base64Data,
+            name: file.name,
+            mime: file.type
+          });
+        };
+        reader.onerror = error => reject(error);
+      });
+    }
+
+    // --- FORM SUBMISSION ---
+    async function submitForm(event) {
+      event.preventDefault();
+
+      // 1. Validate Session
+      const userData = sessionStorage.getItem("portalUser");
+      if (!userData) {
+        alert("You must be logged in to apply.");
+        window.location.href = "index.html";
+        return;
+      }
+      const user = JSON.parse(userData);
+
+      // 2. Change Button State
+      const submitBtn = document.getElementById('submitBtn');
+      submitBtn.innerText = "Uploading Files... Please wait";
+      submitBtn.disabled = true;
+
+      try {
+        // 3. Grab Files and Convert to Base64
+        const marksheetInput = document.getElementById('marksheet');
+        const photoInput = document.getElementById('photo');
+
+        const marksheetBase64 = await getBase64(marksheetInput.files[0]);
+        const photoBase64 = await getBase64(photoInput.files[0]);
+
+        // 4. Resolve Course Name (If 'Other' is selected)
+        let finalCourse = document.getElementById('course').value;
+        const otherCourse = document.getElementById('otherCourse').value.trim();
+        if (finalCourse === "Other" && otherCourse) {
+            finalCourse = otherCourse;
+        }
+
+        // 5. Build Payload
+        const payload = new URLSearchParams({
+          action: "applyCertificate",
+          email: user.email,
+          token: user.token,
+          fullName: document.getElementById('fullName').value.trim(),
+          mobile: document.getElementById('mobile').value.trim(),
+          gender: document.querySelector('input[name="gender"]:checked').value,
+          qualification: document.getElementById('qualification').value.trim(),
+          course: finalCourse,
+          branch: document.querySelector('input[name="branch"]:checked').value,
+          admissionDate: document.getElementById('admissionDate').value,
+          endDate: document.getElementById('endDate').value,
+          videoLink: document.getElementById('videoLink').value.trim(),
+          
+          marksheetData: marksheetBase64.data,
+          marksheetName: marksheetBase64.name,
+          marksheetMime: marksheetBase64.mime,
+
+          photoData: photoBase64.data,
+          photoName: photoBase64.name,
+          photoMime: photoBase64.mime
+        });
+
+        // 6. Send to Backend
+        const res = await fetch(SCRIPT_URL, {
+          method: "POST",
+          body: payload
+        });
+        const result = await res.json();
+
+        if (result.success) {
+          alert("Success! " + result.message);
+          window.location.href = "student.html"; // Go back to dashboard
+        } else {
+          alert("Error: " + result.message);
+          if (String(result.message).toLowerCase().includes("session")) {
+              sessionStorage.removeItem("portalUser");
+              window.location.href = "index.html";
+          }
+        }
+      } catch (err) {
+        console.error(err);
+        alert("Failed to submit application. Please check your connection and try again.");
+      } finally {
+        // Reset Button State
+        submitBtn.innerText = "Submit Application";
+        submitBtn.disabled = false;
+      }
+    }
+  </script>
+</body>
+</html>
