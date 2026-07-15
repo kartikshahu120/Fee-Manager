@@ -572,6 +572,35 @@
   .change-photo-btn { position: absolute; left: -8px; bottom: 4px; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; background: var(--accent); color: white; border: 2px solid #fff; border-radius: 50%; font-size: 16px; font-weight: 800; cursor: pointer; box-shadow: 0 0 10px rgba(138, 43, 226, 0.55); line-height: 1; }
   .change-photo-btn:hover { opacity: 0.9; transform: scale(1.05); }
 
+  /* --- FAQ STYLES --- */
+  .faq-item {
+    border-bottom: 1px solid rgba(138, 43, 226, 0.3);
+    padding: 15px 0;
+  }
+  .faq-item:last-child { border-bottom: none; }
+  
+  .faq-question {
+    font-weight: 700;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    color: #ffffff;
+    transition: color 0.2s;
+  }
+  .faq-question:hover { color: #e9d5ff; }
+  
+  .faq-answer {
+    display: none; /* Hidden by default */
+    margin-top: 10px;
+    color: #e2e8f0;
+    font-size: 14px;
+    line-height: 1.6;
+    background: rgba(0,0,0,0.15);
+    padding: 12px;
+    border-radius: 8px;
+    border-left: 3px solid var(--accent);
+  }
 </style>
 </head>
 <body>
@@ -604,6 +633,7 @@
     <div class="nav-actions" id="navActionsMenu">
       <button onclick="switchTab('dashboard'); toggleMobileMenu();" class="nav-link-btn active-tab" id="tabDashboard">🏠 Dashboard</button>
       <button onclick="switchTab('academics'); toggleMobileMenu();" class="nav-link-btn" id="tabAcademics">🎓 Academics & Performance</button>
+      <button onclick="switchTab('faq'); toggleMobileMenu();" class="nav-link-btn" id="tabFaq">❓ FAQs</button>
       <button onclick="document.getElementById('complaintModal').style.display='flex'; toggleMobileMenu();" class="nav-link-btn" style="background:var(--warning); color:#fff; border:none; box-shadow:0 0 8px rgba(245, 158, 11, 0.5);">💬 Raise Complains</button>
       <button id="btnApplyCert" onclick="applyForCertificate(); toggleMobileMenu();" class="nav-link-btn" disabled style="opacity:0.5;">🎓 Apply for Certificate</button>
       <button id="btnViewCert" onclick="viewCertificate(); toggleMobileMenu();" class="nav-link-btn" style="display:none; background:var(--success); color:#fff; border-color:var(--success);">📄 View Certificate</button>
@@ -847,6 +877,22 @@
     </div>
     <!-- END ACADEMICS DASHBOARD -->
 
+    <!-- FAQ DASHBOARD -->
+    <div id="faqDashboard" style="display:none; animation: fadeIn 0.3s ease;">
+      <div class="result-header">
+        <div>
+          <h1>Frequently Asked Questions</h1>
+          <p>Find quick answers to common portal and academic queries.</p>
+        </div>
+      </div>
+      
+      <!-- We will inject the dynamic FAQs into this empty glass-card -->
+      <div class="glass-card" id="faqList">
+         <div style="text-align: center; color: #e9d5ff; padding: 20px;">Loading FAQs...</div>
+      </div>
+    </div>
+    <!-- END FAQ DASHBOARD -->
+
   </div>
 
   <!-- POPUPS -->
@@ -954,6 +1000,9 @@
 <script>
   let currentStudentData = null; 
 
+  // Default tracking for Capacitor app routing
+  window.currentScreen = window.currentScreen || "dashboard";
+
   // --- MOBILE MENU FUNCTION ---
   function toggleMobileMenu() {
     document.getElementById("navActionsMenu").classList.toggle("active");
@@ -963,11 +1012,21 @@
   function switchTab(tabId) {
     document.getElementById('mainDashboard').style.display = tabId === 'dashboard' ? 'block' : 'none';
     document.getElementById('academicsDashboard').style.display = tabId === 'academics' ? 'block' : 'none';
+    document.getElementById('faqDashboard').style.display = tabId === 'faq' ? 'block' : 'none';
     
     // Top Nav Sync
     document.getElementById('tabDashboard').classList.toggle('active-tab', tabId === 'dashboard');
     document.getElementById('tabAcademics').classList.toggle('active-tab', tabId === 'academics');
+    document.getElementById('tabFaq').classList.toggle('active-tab', tabId === 'faq');
     
+    // Load FAQs dynamically if the user opens the FAQ tab
+    if (tabId === 'faq') {
+      loadDynamicFaqs();
+    }
+    
+    // Update capacitor tracking state
+    window.currentScreen = tabId;
+
     // Scroll to top on switch
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
@@ -1337,6 +1396,32 @@
           btn.innerText = "Submit Ticket";
           btn.disabled = false;
       }
+  }
+
+  async function loadDynamicFaqs() {
+    try {
+      const res = await fetch(`${SCRIPT_URL}?action=getFaqs`);
+      const result = await res.json();
+      const faqList = document.getElementById("faqList");
+      
+      if (result.success && result.faqs && result.faqs.length > 0) {
+        faqList.innerHTML = result.faqs.map(faq => `
+          <div class="faq-item">
+            <div class="faq-question" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'block' ? 'none' : 'block';">
+              ${escapeHtml(faq.question)} <span>▼</span>
+            </div>
+            <div class="faq-answer">
+              ${escapeHtml(faq.answer)}
+            </div>
+          </div>
+        `).join("");
+      } else {
+         faqList.innerHTML = "<p style='text-align:center;'>No FAQs available at the moment.</p>";
+      }
+    } catch(e) {
+      console.error("Failed to load FAQs", e);
+      document.getElementById("faqList").innerHTML = "<p style='text-align:center; color: #ff8a8a;'>Failed to load FAQs.</p>";
+    }
   }
 
   async function loadStudent() {
@@ -1808,6 +1893,26 @@
               joinBtn.href = "https://classroom.google.com";
           }
       }
+  }
+
+  // --- CAPACITOR MOBILE BACK BUTTON HANDLING ---
+  if (window.Capacitor && window.Capacitor.Plugins.App) {
+    const App = window.Capacitor.Plugins.App;
+    
+    App.addListener('backButton', () => {
+      // SCENARIO 1: The student is looking at Academics or FAQs
+      if (window.currentScreen === "academics" || window.currentScreen === "faq") {
+        // Hide current section and show the main dashboard again by reusing existing logic
+        switchTab("dashboard");
+      } 
+      // SCENARIO 2: The student is already on the main dashboard view
+      else if (window.currentScreen === "dashboard") {
+        const confirmLogout = confirm("Are you sure you want to log out?");
+        if (confirmLogout) {
+          logout(); // Directly trigger your existing secure logout script
+        }
+      }
+    });
   }
 
   loadStudent();
