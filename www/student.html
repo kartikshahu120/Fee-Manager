@@ -364,6 +364,7 @@
   
   .res-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; }
   .badge-green { background: #dcfce7; color: #16a34a; }
+  .status-danger { background: #fee2e2; color: #ef4444; }
   
   .donut-container { display: flex; align-items: center; gap: 30px; margin-top: 15px; }
   .donut-chart { width: 140px; height: 140px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: background 0.5s ease;}
@@ -373,8 +374,6 @@
   
   .legend-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #4b5563; margin-bottom: 8px; }
   .legend-dot { width: 12px; height: 12px; border-radius: 50%; }
-
-  .res-bottom-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
   
   .res-table-wrap {
     width: 100%;
@@ -435,7 +434,7 @@
   @keyframes loadingDots{ 0%, 20%{content:'Loading'} 40%{content:'Loading.'} 60%{content:'Loading..'} 80%, 100%{content:'Loading...'} }
 
   @media (max-width:1000px){
-    .two-col-grid, .res-bottom-grid { grid-template-columns: 1fr; }
+    .two-col-grid { grid-template-columns: 1fr; }
   }
 
   /* =====================================================
@@ -591,7 +590,7 @@
   .faq-question:hover { color: #e9d5ff; }
   
   .faq-answer {
-    display: none; /* Hidden by default */
+    display: none;
     margin-top: 10px;
     color: #e2e8f0;
     font-size: 14px;
@@ -627,7 +626,6 @@
         <img src="logo.jpeg" alt="Logo" class="nav-logo">
         <span>CodeLine AI</span>
       </div>
-      <!-- Hamburger Menu Button restored -->
       <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
     </div>
     <div class="nav-actions" id="navActionsMenu">
@@ -765,7 +763,6 @@
         <div class="result-card" style="margin-bottom:0; display:flex; flex-direction:column; justify-content:center;">
           <h3 style="margin:0 0 10px; font-size:16px;">Attendance Overview</h3>
           <div class="donut-container" style="justify-content: center; gap: 40px; margin-top: 20px;">
-            <!-- This inline CSS background is dynamically overwritten in JS based on percentage -->
             <div class="donut-chart" id="attendanceDonutChart" style="background: conic-gradient(#10b981 0% 0%, #ef4444 0% 100%);">
               <div class="donut-inner">
                 <h2 id="attPercentText">0%</h2>
@@ -779,79 +776,45 @@
           </div>
         </div>
 
-        <!-- Exam Results Summary Placeholder -->
+        <!-- Exam Results Summary Box -->
         <div class="result-card" style="margin-bottom:0; display: flex; align-items: center; justify-content: space-around;">
-           <div class="res-score-box" style="border:none;">
-             <h3>Latest Exam Score</h3>
-             <h1><span id="resScoreText">87</span><span>/<span id="resScoreTotal">100</span></span></h1>
-             <span id="resGradeBadge" class="res-badge badge-green" style="margin-bottom: 8px;">Grade: A</span>
-             <br>
-             <span id="resStatusText" style="font-size:12px; font-weight:bold; color:#16a34a;">✔ Status: Pass</span>
-           </div>
-           <div style="text-align:center;">
-             <div style="width: 50px; height: 50px; background: #f3e8ff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; margin: 0 auto 10px;">🏆</div>
-             <h3 style="margin:0; color:#6b7280; font-size:14px;">Rank</h3>
-             <h2 id="resRankText" style="margin:5px 0; color:#111; font-size:24px;">3 / 28</h2>
-             <span style="font-size:12px; color:#6b7280;">Percentile</span>
-             <h4 id="resPercentileText" style="margin:2px 0 0; color:#111;">90.25%</h4>
-           </div>
+            <div class="res-score-box" style="border:none; width: 100%; text-align: center; padding: 20px;">
+               <div style="font-size: 40px; margin-bottom: 10px;">📊</div>
+               <h2 style="margin: 0 0 5px 0; color: #111;">Academic Analytics</h2>
+               <p style="margin: 0; color: #6b7280; font-size: 14px; font-weight: 600;">
+                 Your exam scores, batch performance rankings, and performance tracking are currently being synchronized by the administration.
+               </p>
+               <span class="res-badge" style="background: #e0f2fe; color: #0369a1; margin-top: 12px; font-weight: bold;">Status: Under Optimization</span>
+            </div>
         </div>
       </div>
 
-      <!-- ROW 2: DETAILED RESULTS -->
-      <div class="res-bottom-grid" style="margin-top: 20px;">
+      <!-- ROW 2: DETAILED RESULTS (FULL WIDTH NOW) -->
+      <div style="margin-top: 20px;">
         <div class="result-card" style="margin-bottom:0;">
           <h3 style="margin:0 0 15px; font-size:16px;">Subject Wise Performance</h3>
           
-          <!-- HORIZONTAL SCROLL WRAPPER -->
           <div class="res-table-wrap">
             <table class="res-table">
               <thead>
                 <tr>
                   <th>Subject</th>
-                  <th>Total Marks</th>
+                  <th>Attempted</th>
                   <th>Obtained Marks</th>
                   <th>Percentage</th>
                   <th>Performance</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody id="examsTableBody">
                 <tr>
-                  <td>Java Basics</td><td>25</td><td>23</td><td>92%</td><td><span style="color:#10b981; font-weight:bold;">Excellent</span></td>
-                </tr>
-                <tr>
-                  <td>OOPs Concept</td><td>25</td><td>21</td><td>84%</td><td><span style="color:#3b82f6; font-weight:bold;">Good</span></td>
-                </tr>
-                <tr>
-                  <td>Collections</td><td>25</td><td>20</td><td>80%</td><td><span style="color:#3b82f6; font-weight:bold;">Good</span></td>
-                </tr>
-                <tr>
-                  <td>Exception Handling</td><td>25</td><td>23</td><td>92%</td><td><span style="color:#10b981; font-weight:bold;">Excellent</span></td>
+                  <td colspan="5" style="text-align:center; padding: 25px; color: #6b7280; font-weight: bold;">
+                    No active exam sheets recorded for this session yet.
+                  </td>
                 </tr>
               </tbody>
             </table>
           </div>
 
-        </div>
-
-        <div class="result-card" style="margin-bottom:0;">
-          <h3 style="margin:0 0 15px; font-size:16px;">Strengths & Weaknesses</h3>
-          
-          <!-- VERTICAL SCROLL WRAPPER -->
-          <div class="scroll-list-wrap">
-            <h4 style="margin:0 0 10px; font-size:13px; color:#10b981;">Strengths</h4>
-            <div class="list-item"><span style="color:#10b981;">✔</span> Java Basics</div>
-            <div class="list-item"><span style="color:#10b981;">✔</span> Exception Handling</div>
-            <div class="list-item"><span style="color:#10b981;">✔</span> OOPs Concept</div>
-            
-            <h4 style="margin:20px 0 10px; font-size:13px; color:#ef4444;">Weaknesses</h4>
-            <div class="list-item"><span style="color:#ef4444;">✘</span> Collections Framework</div>
-          </div>
-
-          <!-- DYNAMIC G-SHEET DEEP LINK BUTTON -->
-          <a id="detailedAnalysisBtn" href="#" target="_blank" class="result-btn-filled" style="width:100%; margin-top:15px; display:flex; justify-content:space-between; text-decoration:none; box-sizing:border-box;">
-            View Detailed Analysis (Open Sheet) <span>&gt;</span>
-          </a>
         </div>
       </div>
 
@@ -886,7 +849,6 @@
         </div>
       </div>
       
-      <!-- We will inject the dynamic FAQs into this empty glass-card -->
       <div class="glass-card" id="faqList">
          <div style="text-align: center; color: #e9d5ff; padding: 20px;">Loading FAQs...</div>
       </div>
@@ -1019,15 +981,11 @@
     document.getElementById('tabAcademics').classList.toggle('active-tab', tabId === 'academics');
     document.getElementById('tabFaq').classList.toggle('active-tab', tabId === 'faq');
     
-    // Load FAQs dynamically if the user opens the FAQ tab
     if (tabId === 'faq') {
       loadDynamicFaqs();
     }
     
-    // Update capacitor tracking state
     window.currentScreen = tabId;
-
-    // Scroll to top on switch
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
@@ -1043,16 +1001,14 @@
   });
 
   function handleSwipe() {
-    if (window.innerWidth > 768) return; // Only run on mobile
-    const threshold = 60; // Minimum swipe distance
+    if (window.innerWidth > 768) return; 
+    const threshold = 60; 
     if (touchendX < touchstartX - threshold) {
-      // Swiped Left (Go to Academics)
       if (document.getElementById('mainDashboard').style.display !== 'none') {
         switchTab('academics');
       }
     }
     if (touchendX > touchstartX + threshold) {
-      // Swiped Right (Go back to Dashboard)
       if (document.getElementById('academicsDashboard').style.display !== 'none') {
         switchTab('dashboard');
       }
@@ -1154,19 +1110,16 @@
 
   function parseStudentPortalDate(dateText) {
     if (!dateText) return null;
-
     const parsed = new Date(dateText);
     if (!isNaN(parsed.getTime())) {
       parsed.setHours(0, 0, 0, 0);
       return parsed;
     }
-
     return null;
   }
 
   function shouldShowDueReminder(profile) {
     if (!profile) return false;
-
     const balance = Number(profile.balanceFees || 0);
     const dueAmount = Number(profile.duePaymentNow || 0);
     const dueDate = parseStudentPortalDate(profile.dueDate);
@@ -1191,13 +1144,11 @@
 
   function showDueReminderPopup(profile) {
     if (!shouldShowDueReminder(profile)) return;
-
     document.getElementById("dueStudentName").innerText = profile.name || "-";
     document.getElementById("dueCourseName").innerText = profile.course || "-";
     document.getElementById("dueReminderDate").innerText = profile.dueDate || "-";
     document.getElementById("dueReminderAmount").innerText = Number(profile.duePaymentNow || 0).toFixed(2);
     document.getElementById("dueReminderLateDays").innerText = Number(profile.unpaidDays || 0);
-
     document.getElementById("dueReminderOverlay").style.display = "flex";
     document.body.style.overflow = "hidden";
   }
@@ -1209,9 +1160,7 @@
 
   function payFromDueReminder() {
     closeDueReminder();
-
     const amount = Number(currentStudentData?.duePaymentNow || 0);
-
     if (typeof openPaymentQrPopup === "function" && amount > 0) {
       openPaymentQrPopup(amount);
     } else {
@@ -1227,18 +1176,14 @@
 
   function toggleWifiPassword() {
     isWifiPasswordVisible = !isWifiPasswordVisible;
-
     const passEl = document.getElementById("studentWifiPassword");
     const btnEl = document.getElementById("wifiToggleBtn");
 
     if (!passEl || !btnEl) return;
-
     const actualPassword = getCurrentWifiPassword();
-
     passEl.innerText = isWifiPasswordVisible && actualPassword
       ? actualPassword
       : (actualPassword ? "••••••••••" : "-");
-
     btnEl.innerText = isWifiPasswordVisible ? "Hide" : "Show";
   }
 
@@ -1259,15 +1204,11 @@
 
   function parsePortalSessionDate(value) {
     if (!value) return null;
-
     if (value instanceof Date && !isNaN(value.getTime())) return value;
-
     const text = String(value || "").trim();
     if (!text) return null;
-
     const direct = new Date(text);
     if (!isNaN(direct.getTime())) return direct;
-
     const match = text.match(/^(\d{1,2})\s+([A-Za-z]{3,})\s+(\d{4})\s+(\d{1,2}):(\d{2})(?::(\d{2}))?\s*(AM|PM)$/i);
     if (!match) return null;
 
@@ -1289,7 +1230,6 @@
     if (month === undefined) return null;
     if (ampm === "PM" && hour < 12) hour += 12;
     if (ampm === "AM" && hour === 12) hour = 0;
-
     const parsed = new Date(year, month, day, hour, minute, second);
     return isNaN(parsed.getTime()) ? null : parsed;
   }
@@ -1297,47 +1237,11 @@
   function getFilteredSessionText(user) {
     const loginRaw = user && (user.loginAt || user.loginTime) ? (user.loginAt || user.loginTime) : "";
     const loginDate = parsePortalSessionDate(loginRaw);
-
     const sessionStart = new Date(2026, 4, 25, 18, 30, 0);
-
     if (!loginDate || loginDate.getTime() < sessionStart.getTime()) {
       return "-";
     }
-
     return (user && user.loginTime) ? user.loginTime : loginDate.toLocaleString();
-  }
-
-  function renderCourseDownloadCard(courseLink) {
-    const link = String(courseLink || "").trim();
-
-    if (!link) {
-      return `
-        <div class="info">
-          <b style="color:#e9d5ff;">Course Material:</b>
-          <span class="course-download-disabled">Not uploaded yet</span>
-        </div>
-      `;
-    }
-
-    return `
-      <div class="info">
-        <b style="color:#e9d5ff;">Course Material:</b>
-        <a href="${escapeHtml(link)}" target="_blank" rel="noopener noreferrer" class="course-download-btn">
-          ⬇️ Download Course
-        </a>
-      </div>
-    `;
-  }
-
-  // --- COMPLAINTS/HELPDESK FUNCTIONS ---
-  function readOptionalTicketFile(file) {
-      return new Promise((resolve) => {
-          if (!file) return resolve({ base64: "", name: "", mime: "" });
-          const reader = new FileReader();
-          reader.onload = () => resolve({ base64: reader.result, name: file.name, mime: file.type });
-          reader.onerror = () => resolve({ base64: "", name: "", mime: "" });
-          reader.readAsDataURL(file);
-      });
   }
 
   async function sendTicket() {
@@ -1364,7 +1268,13 @@
       btn.innerText = "Submitting...";
       btn.disabled = true;
 
-      const fileData = await readOptionalTicketFile(optFile);
+      const fileData = await new Promise((resolve) => {
+          if (!optFile) return resolve({ base64: "", name: "", mime: "" });
+          const reader = new FileReader();
+          reader.onload = () => resolve({ base64: reader.result, name: optFile.name, mime: optFile.type });
+          reader.onerror = () => resolve({ base64: "", name: "", mime: "" });
+          reader.readAsDataURL(optFile);
+      });
 
       const payload = new URLSearchParams({
           action: "submitComplaint",
@@ -1436,6 +1346,8 @@
         const params = new URLSearchParams({ action: "getStudentDashboard", email: user.email, token: user.token });
         const res = await fetch(`${SCRIPT_URL}?${params.toString()}`);
         const result = await res.json();
+        
+        console.log("🚨 DATA FROM BACKEND:", result); 
 
         if (!result.success) {
           if (result.noAdmission) { alert(result.message); logout(); return; }
@@ -1454,7 +1366,6 @@
         const balance = Number(p.balanceFees || 0);
         
         let statusBadge = "";
-
         if (currentVerify === "CANCELED" || unpaidDays > 15) {
            statusBadge = `<span style="display:inline-block; margin-left: 15px; color:#fff; font-size:12px; font-weight:bold; border: 1px solid #dc2626; padding: 4px 10px; border-radius: 6px; background: rgba(220, 38, 38, 0.8); vertical-align:middle; box-shadow: 0 0 8px rgba(220, 38, 38, 0.5);">🚫 Admission Cancelled</span>`;
         } else if (balance > 0) {
@@ -1470,15 +1381,55 @@
         } else {
            statusBadge = `<span style="display:inline-block; margin-left: 15px; color:#fff; font-size:12px; font-weight:bold; border: 1px solid var(--accent); padding: 4px 10px; border-radius: 6px; background: rgba(138, 43, 226, 0.85); vertical-align:middle; box-shadow: 0 0 8px rgba(138, 43, 226, 0.35);">✅ Fees Clear</span>`;
         }
-
         document.getElementById("studentName").innerHTML = (p.name || "Student Dashboard") + statusBadge;
-
-        // --- NEW: INJECT DYNAMIC DATA INTO RESULTS DASHBOARD ---
-        // CONNECT THE GSHEET DEEP LINK TO THE BUTTON
-        const myGsheetDeepLink = "PASTE_YOUR_GOOGLE_SHEET_DEEP_LINK_HERE";
-        document.getElementById("detailedAnalysisBtn").href = `${myGsheetDeepLink}?email=${encodeURIComponent(p.email)}`;
-
         updateCertificateButtons();
+
+        // --- RENDER DYNAMIC EXAM RESULTS ---
+        if (result.exams && result.exams.length > 0) {
+            const latestExam = result.exams[result.exams.length - 1]; 
+            
+            const scoreBox = document.querySelector('.res-score-box');
+            if (scoreBox) {
+                let badgeClass = String(latestExam.status).toUpperCase().includes("PASS") ? "badge-green" : "status-danger";
+                let passFailText = String(latestExam.status).toUpperCase().includes("PASS") ? "✔ Status: Pass" : "✖ Status: Fail";
+                let statusColor = String(latestExam.status).toUpperCase().includes("PASS") ? "#16a34a" : "#dc2626";
+
+                scoreBox.innerHTML = `
+                    <h3 style="margin: 0; color: #6b7280; font-size: 14px;">Latest Exam Score</h3>
+                    <h1 style="margin: 5px 0; font-size: 38px; color: ${statusColor};">
+                        <span>${escapeHtml(latestExam.score)}</span><span style="font-size: 20px; color: #9ca3af;"> / ${escapeHtml(latestExam.attempted || '-')}</span>
+                    </h1>
+                    <span class="res-badge ${badgeClass}" style="margin-bottom: 8px;">Course: ${escapeHtml(latestExam.course)}</span>
+                    <br>
+                    <span style="font-size:12px; font-weight:bold; color:${statusColor};">${passFailText}</span>
+                    
+                    <div style="margin-top: 15px; padding-top: 15px; border-top: 1px dashed #e5e7eb;">
+                        <h4 style="margin:0; color:#111; font-size:14px;">Overall Percentile</h4>
+                        <h2 style="margin:5px 0 0; color:#111;">${escapeHtml(latestExam.percentage)}</h2>
+                    </div>
+                `;
+            }
+
+            const tableBody = document.getElementById('examsTableBody');
+            if (tableBody) {
+                tableBody.innerHTML = ""; 
+                
+                [...result.exams].reverse().forEach(exam => {
+                    let perfColor = String(exam.status).toUpperCase().includes("PASS") ? "#10b981" : "#ef4444";
+                    let perfText = String(exam.status).toUpperCase().includes("PASS") ? "Excellent" : "Needs Work";
+                    
+                    tableBody.innerHTML += `
+                        <tr style="transition: background 0.2s ease;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='transparent'">
+                            <td><strong>${escapeHtml(exam.course)}</strong></td>
+                            <td>${escapeHtml(exam.attempted || '-')}</td>
+                            <td>${escapeHtml(exam.score)}</td>
+                            <td><strong>${escapeHtml(exam.percentage)}</strong></td>
+                            <td><span style="color:${perfColor}; font-weight:bold;">${perfText}</span></td>
+                        </tr>
+                    `;
+                });
+            }
+        }
 
         const marqueeContainer = document.getElementById("marqueeContainer");
         if (marqueeContainer) {
@@ -1612,7 +1563,6 @@
             const isLate = String(row.statusText || "").toLowerCase().includes("late");
             const safeReceipt = String(row.receiptNo || "").startsWith("-") ? "-" : escapeHtml(row.receiptNo || "-");
             
-            // Apply new soft badges
             let badgeClass = "status-success";
             let statusTxt = row.statusText || "Paid";
             if (statusTxt.toLowerCase().includes("pending")) badgeClass = "status-warning";
@@ -1702,9 +1652,7 @@
           }
         }
 
-        // SYNC ATTENDANCE TABLE & DYNAMICALLY UPDATE DONUT GRAPH
         const attendanceBodyQuick = document.getElementById("attendanceTableBodyQuick");
-        
         if (attendanceBodyQuick) {
             attendanceBodyQuick.innerHTML = "";
             
@@ -1758,7 +1706,6 @@
 
                     let badge = statusUpper.includes("ABSENT") ? "color:#dc2626; font-weight:bold;" : "color:#16a34a; font-weight:bold;";
                     
-                    // Only display top 5 rows on the summary dashboard quick table
                     if (index < 5) {
                         attendanceBodyQuick.innerHTML += `
                             <tr style="border-bottom: 1px solid #e5e7eb;">
@@ -1770,13 +1717,11 @@
                     }
                 });
 
-                // UPDATE QUICK SUMMARY TEXT
                 const summaryEl = document.getElementById("attendanceSummary");
                 if (summaryEl) {
                     summaryEl.innerHTML = `<span style="color: #16a34a;">Present: ${presentCount}</span> &nbsp;|&nbsp; <span style="color: #dc2626;">Absent: ${absentCount}</span>`;
                 }
 
-                // DYNAMICALLY UPDATE THE DONUT CHART IN THE ACADEMICS TAB
                 const totalClasses = presentCount + absentCount;
                 let presentPercent = 0;
                 if (totalClasses > 0) {
@@ -1814,7 +1759,6 @@
         resolve("");
         return;
       }
-
       const reader = new FileReader();
       reader.onload = () => resolve(reader.result);
       reader.onerror = () => reject(new Error("Failed to read profile photo."));
@@ -1833,7 +1777,6 @@
     }
 
     const user = getUser();
-
     if (!user || user.role !== "student" || !user.token) {
       alert("Session expired.");
       logout();
@@ -1844,7 +1787,6 @@
 
     try {
       const base64 = await fileToBase64Student(file);
-
       const payload = new URLSearchParams({
         action: "updateStudentProfilePhoto",
         email: user.email,
@@ -1860,13 +1802,11 @@
       });
 
       const result = await res.json();
-
       alert(result.message || "Done");
 
       if (result.success) {
         await loadStudent();
       }
-
     } catch (err) {
       console.error(err);
       alert("Failed to upload profile photo.");
@@ -1882,7 +1822,6 @@
       
       if (window.availableClassrooms && window.availableClassrooms[selectedIndex]) {
           const cls = window.availableClassrooms[selectedIndex];
-          
           document.getElementById("classCodeSpan").innerText = cls.code || "No Code Available";
           
           const joinBtn = document.getElementById("classJoinBtn");
@@ -1895,21 +1834,16 @@
       }
   }
 
-  // --- CAPACITOR MOBILE BACK BUTTON HANDLING ---
   if (window.Capacitor && window.Capacitor.Plugins.App) {
     const App = window.Capacitor.Plugins.App;
-    
     App.addListener('backButton', () => {
-      // SCENARIO 1: The student is looking at Academics or FAQs
       if (window.currentScreen === "academics" || window.currentScreen === "faq") {
-        // Hide current section and show the main dashboard again by reusing existing logic
         switchTab("dashboard");
       } 
-      // SCENARIO 2: The student is already on the main dashboard view
       else if (window.currentScreen === "dashboard") {
         const confirmLogout = confirm("Are you sure you want to log out?");
         if (confirmLogout) {
-          logout(); // Directly trigger your existing secure logout script
+          logout();
         }
       }
     });
