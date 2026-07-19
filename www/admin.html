@@ -46,6 +46,7 @@
       height: 100vh; 
       overflow-y: auto; 
       z-index: 50; 
+      transition: 0.3s ease;
     }
     
     .sidebar h2 { 
@@ -102,9 +103,9 @@
       font-weight: 700; 
       font-size: 13px; 
       cursor: pointer; 
-      display: flex;                 /* <--- Forces side-by-side layout */
-      align-items: center;           /* <--- Perfectly centers the badge */
-      justify-content: space-between;/* <--- Pushes badge to far right */
+      display: flex;                 
+      align-items: center;           
+      justify-content: space-between;
       transition: 0.3s ease; 
     }
     
@@ -864,11 +865,29 @@
       80%, 100% { content: 'Loading...' } 
     }
 
+    /* ------------------------------ */
+    /* MOBILE HAMBURGER MENU ADDITIONS*/
+    /* ------------------------------ */
+    .mobile-header { display: none; align-items: center; gap: 15px; margin-bottom: 20px; }
+    .hamburger-btn { background: var(--btn-bg); color: #fff; border: 1px solid var(--accent); padding: 8px 15px; border-radius: 8px; font-size: 20px; cursor: pointer; transition: 0.3s; }
+    .hamburger-btn:hover { background: var(--primary); }
+    .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 45; backdrop-filter: blur(2px); }
+    .sidebar-overlay.show { display: block; }
+
     @media (max-width:900px){ 
       body { flex-direction: column; } 
-      .sidebar { position: relative; width: 100%; height: auto; padding: 15px; border-radius: 0; border-right: none; border-bottom: 1px solid var(--accent); } 
+      
+      .mobile-header { display: flex; }
+      .desktop-title { display: none; }
+      
+      .sidebar { position: fixed; left: -300px; width: 260px; height: 100vh; padding: 15px; border-radius: 0; border-right: 1px solid var(--accent); transition: 0.3s ease; z-index: 50; } 
+      .sidebar.open { left: 0; }
+      
       .main { margin-left: 0; width: 100%; padding: 15px; } 
-      .header-top { flex-direction: column; gap: 10px; } 
+      .header-top { flex-direction: column; align-items: flex-start; gap: 10px; } 
+      .top-filter-group { width: 100%; display: flex; flex-direction: column; gap: 10px; }
+      .top-branch-filter { width: 100%; }
+      .table-wrap { overflow-x: auto; padding-bottom: 150px; }
     }
 
     /* ------------------------------ */
@@ -923,6 +942,8 @@
     </div>
   </div>
 
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
   <div class="sidebar">
     <h2 onclick="switchAdminTab('default')" title="Go to Default Dashboard">
       <img src="logo.jpeg" alt="Logo" class="sidebar-logo">
@@ -969,7 +990,11 @@
   
   <div class="main">
     <div class="header-top">
-      <div class="header-title">WELCOME TO CODELINE AI</div>
+      <div class="mobile-header">
+        <button class="hamburger-btn" onclick="toggleSidebar()">☰</button>
+        <div class="header-title">WELCOME TO CODELINE AI</div>
+      </div>
+      <div class="header-title desktop-title">WELCOME TO CODELINE AI</div>
 
       <div style="display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.08);border:1px solid rgba(138,43,226,0.35);border-radius:20px;padding:7px 14px;">
         <span style="font-size:13px;font-weight:700;color:#fff;letter-spacing:0.3px;">✉️ Email Alerts</span>
@@ -1344,6 +1369,18 @@
   <script src="config.js"></script>
   <script>
   
+// --- MOBILE HAMBURGER LOGIC ---
+    function toggleSidebar() {
+      const sidebar = document.querySelector('.sidebar');
+      const overlay = document.getElementById('sidebarOverlay');
+      sidebar.classList.toggle('open');
+      if (sidebar.classList.contains('open')) {
+        overlay.classList.add('show');
+      } else {
+        overlay.classList.remove('show');
+      }
+    }
+
 // --- SMART ACKNOWLEDGMENT STATE (Now with LocalStorage!) ---
     const getStoredState = (key) => parseInt(localStorage.getItem('adminBadge_' + key) || "0", 10);
 
@@ -2097,6 +2134,12 @@
       
       activeAdminTab = tabKey;
       renderAdminActiveTable();
+      
+      // Close sidebar on mobile after navigating
+      if(window.innerWidth <= 900) {
+        document.querySelector('.sidebar').classList.remove('open');
+        document.getElementById('sidebarOverlay').classList.remove('show');
+      }
     }
 
     // --- CERTIFICATE FUNCTIONS ---
